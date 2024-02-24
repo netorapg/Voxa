@@ -1,1 +1,4 @@
 # Voxa
+
+Voxa é um aplicativo de gerenciamento de estoque, totalmente voltado para sacoleiros. Sacoleiros são autônomos que ganham a vida vendendo peças de roupa  pelas ruas, andando pela cidade, muitas vezes, viajam quilômetros até polos para reporem o estoque,
+por serem autônomos e muitos deles trabalharem sozinhos, acabam tendo certa dificuldade em gerenciar seu estoque, que muitas vezes é feito em casa sem o devido espaço para armazenar tantas peças, o que pode levar à confusão, esquecer que já possuía alguma peça ou achar que tem uma peça, passar horas procurando para depois descobrir que não possuía. Pensando nesses problemas do cotidiano de um sacoleiro, o Voxa será essa engrenagem que falta, um sistema de gerenciamento simples, onde o sacoleiro registrará suas peças de forma inteligente e eficiente, um estoque que cabe no bolso.
