@@ -1,18 +1,18 @@
 import 'dart:io';
 
-/*
+
 main() {
   print('aula funções');
   print('digite o seu nome: ');
-  var nome = stdin.readLineSync();
+  String? nome = stdin.readLineSync();
   print('idade');
   var entradaIdade = stdin.readLineSync()!;
   var idade = int.parse(entradaIdade);
   //var idade = entradaIdade as int;
   print('Meu nome é $nome, a minha idade é $idade');
 }
-  */
-
+  
+/*
 void primeiroPrint() {}
 
 int nota1() {
@@ -74,7 +74,7 @@ main() {
   }
 }
 
-
+*/
 
 /*
 Atividade 01
@@ -113,4 +113,28 @@ void poloProximo(){
 
 */
 
+/*
+
+Atividade 02
+a) Em programação o null é um problema? Explique.
+O null, não é em si o problema, mas ele pode  causá-lo. Pois quando um dado é nulo, quando o programa necessitar que esse dado tenha um valor, ele irá acarretar
+em uma falha, como de travar completamente o sistema, por exemplo.
+b) O que é null safety? para que serve? Quais são as vantagens e desvantagens?
+Null safety são parâmetros que "asseguram" o uso do null, como o ? que indica que uma variavel pode receber o valor nulo e o ! que 
+indica que o programa pode confiar que não acarretará em um erro. Uma vantagem do null safety seria a eficiência na hora do desenvolvimento,
+contudo, é mais recomendado não usa-lo, pois é um risco muitas vezes desnecessário a se passar.
+c) Faça um exemplo do uso incorreto de um dos operadores Null Safety.
+
+d) Em relação ao Null Safety, quais são os operadores existentes? Para que serve cada uma. No contexto do seu projeto, escreva um exemplo do uso correto de cada operador.
+
+Atividade 03
+a) Organize todo o código do estudo de caso desenvolvido até o momento em funções;
+b) Organize todo o código do seu projeto desenvolvido até o momento em funções;
+
+Atividade 04
+
+a) Quais são os tipos de parâmetros em dart? Explique as diferenças, vantagens e desvantagens de cada uma.
+b) Em relação a cada tipo de parâmetro, faça 3 exemplos do estudo de caso. 
+c) Em relação a cada tipo de parâmetro, faça 3 exemplos do projeto. 
+ */
 
