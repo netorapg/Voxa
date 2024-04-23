@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:voxa/rota.dart';
-import 'package:voxa/widget/principal.dart';
-import 'package:voxa/widget/formulario_aluno.dart';
-import 'package:voxa/widget/lista_aluno.dart';
+import 'package:voxa/widget/estoque.dart';
+import 'package:voxa/widget/info.dart';
+import 'package:voxa/widget/cadastro.dart';
 
 class App extends StatelessWidget{
   @override
@@ -16,9 +16,9 @@ class App extends StatelessWidget{
         useMaterial3: false,
       ),
       routes: {
-        Rota.home :(context) => Principal(),
-        Rota.formAluno:(context) => FormularioAluno(),
-        Rota.listaAluno:(context) => ListaAluno()
+        Rota.estoque :(context) => Estoque(),
+        Rota.info:(context) => const Informacoes(),
+        Rota.cadastro:(context) => const Cadastro()
       },
     );
   }
