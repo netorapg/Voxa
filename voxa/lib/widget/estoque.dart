@@ -21,6 +21,7 @@ class Estoque extends StatelessWidget {
               nome: 'Cadastrar Novo Produto',
               contexto: context,
               rota: Rota.cadastro),
+          Utilitarios().criarTabela( ),
         ],
       ),
     );
