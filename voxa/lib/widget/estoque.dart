@@ -11,7 +11,6 @@ class Estoque extends StatelessWidget {
       appBar: AppBar(title: const Text('Estoque')),
       body: Column(
         children: [
-          const Text('Estoque'),
           Utilitarios().criarBotaoDeNavegacao(
               nome: 'Informações do produto',
               contexto: context,
@@ -20,7 +19,7 @@ class Estoque extends StatelessWidget {
               nome: 'Cadastrar Novo Produto',
               contexto: context,
               rota: Rota.cadastro),
-          Utilitarios().criarTabela( ),
+         // Utilitarios().criarTabela(),
         ],
       ),
     );

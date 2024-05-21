@@ -5,12 +5,7 @@ class Cadastro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cadastro do Produto')),
-      body: const Column(
-        children: [
-          Text('Lista Aluno'),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Cadastrar Novo Produto')),
     );
   }
 }

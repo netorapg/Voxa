@@ -15,7 +15,5 @@ class Utilitarios {
         child: Text(nome)
         );
           }
-
-
 }
 
