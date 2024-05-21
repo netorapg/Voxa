@@ -6,6 +6,8 @@ import 'package:voxa/widget/info.dart';
 import 'package:voxa/widget/cadastro.dart';
 
 class App extends StatelessWidget{
+  const App({super.key});
+
   @override
   Widget build (BuildContext context){
     return MaterialApp(
@@ -16,7 +18,7 @@ class App extends StatelessWidget{
         useMaterial3: false,
       ),
       routes: {
-        Rota.estoque :(context) => Estoque(),
+        Rota.estoque :(context) => const Estoque(),
         Rota.info:(context) => const Informacoes(),
         Rota.cadastro:(context) => const Cadastro()
       },

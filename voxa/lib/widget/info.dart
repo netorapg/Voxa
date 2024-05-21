@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Informacoes extends StatelessWidget {
-  const Informacoes({Key? key}) : super(key: key);
+  const Informacoes({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Informações do Produto')),
+      appBar: AppBar(title: const Text('Informações do Produto')),
       body: const Text('Info'),
     );
   }

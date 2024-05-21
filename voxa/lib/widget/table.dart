@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 class WidgetTable extends StatelessWidget {
+  const WidgetTable({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Tabela'),
+          title: const Text('Tabela'),
         ),
         body: criarTabela());
   }
 
   criarTabela() {
     return Table(
-      defaultColumnWidth: FixedColumnWidth(150.0),
-      border: TableBorder(
+      defaultColumnWidth: const FixedColumnWidth(150.0),
+      border: const TableBorder(
         horizontalInside: BorderSide(
           color: Colors.black,
           style: BorderStyle.solid,
@@ -34,11 +36,11 @@ class WidgetTable extends StatelessWidget {
       children: listaNomes.split(',').map((name) {
         return Container(
           alignment: Alignment.center,
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             name,
-            style: TextStyle(fontSize: 20.0),
+            style: const TextStyle(fontSize: 20.0),
           ),
-          padding: EdgeInsets.all(8.0),
         );
       }).toList(),
     );

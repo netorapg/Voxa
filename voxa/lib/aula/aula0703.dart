@@ -1,4 +1,3 @@
-import 'dart:io';
 
 main() {
   funcaoVoxaAnonima(pecaDeRoupa: "Camisa", tamanho: "GG", 
@@ -24,6 +23,7 @@ String material = "Algodão", required int quantidade, required Function(int) pr
     } else{
       print("Negativas");
     }
+    return null;
   }
 
   String? vendeOuGuarda(String x){
@@ -33,6 +33,7 @@ String material = "Algodão", required int quantidade, required Function(int) pr
     else {
       print("Aguarde para a próxima estação");
     }
+    return null;
   }
 
 

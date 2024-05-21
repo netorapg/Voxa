@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:voxa/backgroundImage.dart';
 import 'package:voxa/rota.dart';
 import 'package:voxa/utilitarios.dart';
-import 'package:voxa/widget/cadastro.dart';
 
 class Estoque extends StatelessWidget {
+  const Estoque({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Estoque')),
+      appBar: AppBar(title: const Text('Estoque')),
       body: Column(
         children: [
           const Text('Estoque'),

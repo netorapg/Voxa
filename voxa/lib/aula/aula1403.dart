@@ -2,7 +2,6 @@ import 'package:voxa/aula/Cidade.dart';
 import 'package:voxa/aula/Cliente.dart';
 import 'package:voxa/aula/Estado.dart';
 import 'package:voxa/aula/Fornecedor.dart';
-import 'package:voxa/aula/Peca.dart';
 import 'package:voxa/aula/Venda.dart';
 
 void main (List<String> args){
