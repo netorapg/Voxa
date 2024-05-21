@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:voxa/rota.dart';
-import 'package:voxa/widget/estoque.dart';
-import 'package:voxa/widget/info.dart';
-import 'package:voxa/widget/cadastro.dart';
+import 'package:voxa/widget/rota.dart';
+import 'package:voxa/screens/estoque.dart';
+import 'package:voxa/screens/info.dart';
+import 'package:voxa/screens/cadastro.dart';
 
 class App extends StatelessWidget{
   const App({super.key});
@@ -14,7 +14,7 @@ class App extends StatelessWidget{
       title: 'Meu App',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 212, 88)),
         useMaterial3: false,
       ),
       routes: {
