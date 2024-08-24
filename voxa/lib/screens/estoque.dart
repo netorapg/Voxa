@@ -8,7 +8,7 @@ class Estoque extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Estoque')),
+      appBar: AppBar(title: const Text('Voxa')),
       body: Column(
         children: [
           Utilitarios().criarBotaoDeNavegacao(
