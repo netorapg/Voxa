@@ -11,13 +11,11 @@ class Cadastro extends StatefulWidget {
 
 class _CadastroState extends State<Cadastro> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _tipoController = TextEditingController();
-  final TextEditingController _tamanhosController = TextEditingController();
   final TextEditingController _coresController = TextEditingController();
   final TextEditingController _marcaController = TextEditingController();
   final TextEditingController _materialController = TextEditingController();
-  final TextEditingController _quantidadeController = TextEditingController();
   final TextEditingController _fornecedorController = TextEditingController();
+  int _quantidade = 0;
   File? _imagem;
 
   // Simulando o estoque para verificação de duplicação
@@ -25,8 +23,7 @@ class _CadastroState extends State<Cadastro> {
 
   bool _isDuplicated() {
     return _estoque.any((produto) =>
-        produto['tipo'] == _tipoController.text &&
-        produto['tamanhos'] == _tamanhosController.text &&
+        produto['tipo'] == _selectedTipo &&
         produto['cores'] == _coresController.text &&
         produto['marca'] == _marcaController.text &&
         produto['material'] == _materialController.text &&
@@ -60,12 +57,11 @@ class _CadastroState extends State<Cadastro> {
       }
 
       _estoque.add({
-        'tipo': _tipoController.text,
-        'tamanhos': _tamanhosController.text,
+        'tipo': _selectedTipo,
         'cores': _coresController.text,
         'marca': _marcaController.text,
         'material': _materialController.text,
-        'quantidade': _quantidadeController.text,
+        'quantidade': _quantidade.toString(),
         'fornecedor': _fornecedorController.text,
         'imagem': _imagem?.path ?? '',
       });
@@ -83,13 +79,12 @@ class _CadastroState extends State<Cadastro> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDraftItem('Tipo', _tipoController.text, _tipoController),
-              _buildDraftItem('Tamanhos', _tamanhosController.text, _tamanhosController),
-              _buildDraftItem('Cores', _coresController.text, _coresController),
-              _buildDraftItem('Marca', _marcaController.text, _marcaController),
-              _buildDraftItem('Material', _materialController.text, _materialController),
-              _buildDraftItem('Quantidade', _quantidadeController.text, _quantidadeController),
-              _buildDraftItem('Fornecedor', _fornecedorController.text, _fornecedorController),
+              _buildDraftItem('Tipo', _selectedTipo, _editTipo),
+              _buildDraftItem('Cores', _coresController.text, _coresController as Function()),
+              _buildDraftItem('Marca', _marcaController.text, _marcaController as Function()),
+              _buildDraftItem('Material', _materialController.text, _materialController as Function()),
+            // _buildDraftItem('Quantidade', _quantidade.toString(), _quantidadeController as Function()),
+              _buildDraftItem('Fornecedor', _fornecedorController.text, _fornecedorController as Function()),
               if (_imagem != null)
                 Column(
                   children: [
@@ -119,40 +114,158 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
-  Widget _buildDraftItem(String label, String value, TextEditingController controller) {
+  Widget _buildDraftItem(String label, String value, Function() editFunction) {
     return Row(
       children: [
         Expanded(child: Text('$label: $value')),
         IconButton(
           icon: const Icon(Icons.edit),
-          onPressed: () {
-            Navigator.of(context).pop();
-            _editField(controller, label);
-          },
+          onPressed: editFunction,
         ),
       ],
     );
   }
 
-  void _editField(TextEditingController controller, String label) {
+  String _selectedTipo = '';
+
+  void _editTipo() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Editar $label'),
-          content: TextField(
-            controller: controller,
-            decoration: InputDecoration(labelText: label),
+          title: const Text('Editar Tipo'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile(
+                title: const Text('Camisa'),
+                value: 'Camisa',
+                groupValue: _selectedTipo,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTipo = value.toString();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              RadioListTile(
+                title: const Text('Camiseta'),
+                value: 'Camiseta',
+                groupValue: _selectedTipo,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTipo = value.toString();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              RadioListTile(
+                title: const Text('Vestido'),
+                value: 'Vestido',
+                groupValue: _selectedTipo,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTipo = value.toString();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              RadioListTile(
+                title: const Text('Calça Jeans'),
+                value: 'Calça Jeans',
+                groupValue: _selectedTipo,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTipo = value.toString();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              RadioListTile(
+                title: const Text('Jaqueta'),
+                value: 'Jaqueta',
+                groupValue: _selectedTipo,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTipo = value.toString();
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Salvar'),
-            ),
-          ],
         );
       },
     );
+  }
+
+  void _editTamanhos() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Editar Tamanhos'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CheckboxListTile(
+                    title: const Text('P'),
+                    value: _selectedSizes.contains('P'),
+                    onChanged: (value) {
+                      setState(() => _toggleSize('P'));
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('M'),
+                    value: _selectedSizes.contains('M'),
+                    onChanged: (value) {
+                      setState(() => _toggleSize('M'));
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('G'),
+                    value: _selectedSizes.contains('G'),
+                    onChanged: (value) {
+                      setState(() => _toggleSize('G'));
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('GG'),
+                    value: _selectedSizes.contains('GG'),
+                    onChanged: (value) {
+                      setState(() => _toggleSize('GG'));
+                    },
+                  ),
+                  CheckboxListTile(
+                    title: const Text('XGG'),
+                    value: _selectedSizes.contains('XGG'),
+                    onChanged: (value) {
+                      setState(() => _toggleSize('XGG'));
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  List<String> _selectedSizes = [];
+  String _selectedTamanhos = '';
+
+  void _toggleSize(String size) {
+    setState(() {
+      if (_selectedSizes.contains(size)) {
+        _selectedSizes.remove(size);
+      } else {
+        _selectedSizes.add(size);
+      }
+      _selectedTamanhos = _selectedSizes.join(', ');  // Atualiza a string com os tamanhos selecionados
+    });
   }
 
   @override
@@ -165,16 +278,8 @@ class _CadastroState extends State<Cadastro> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
-                controller: _tipoController,
-                decoration: const InputDecoration(labelText: 'Tipo'),
-                validator: (value) => value?.isEmpty ?? true ? 'Campo obrigatório' : null,
-              ),
-              TextFormField(
-                controller: _tamanhosController,
-                decoration: const InputDecoration(labelText: 'Tamanhos'),
-                validator: (value) => value?.isEmpty ?? true ? 'Campo obrigatório' : null,
-              ),
+              _buildDraftItem('Tipo', _selectedTipo, _editTipo),
+              _buildDraftItem('Tamanhos', _selectedTamanhos, _editTamanhos),
               TextFormField(
                 controller: _coresController,
                 decoration: const InputDecoration(labelText: 'Cores'),
@@ -190,33 +295,40 @@ class _CadastroState extends State<Cadastro> {
                 decoration: const InputDecoration(labelText: 'Material'),
                 validator: (value) => value?.isEmpty ?? true ? 'Campo obrigatório' : null,
               ),
-              TextFormField(
-                controller: _quantidadeController,
-                decoration: const InputDecoration(labelText: 'Quantidade em Estoque'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value?.isEmpty ?? true ? 'Campo obrigatório' : null,
+              const Text('Quantidade em Estoque'),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        if (_quantidade > 0) _quantidade--;
+                      });
+                    },
+                  ),
+                  Text('$_quantidade'),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        _quantidade++;
+                      });
+                    },
+                  ),
+                ],
               ),
               TextFormField(
                 controller: _fornecedorController,
                 decoration: const InputDecoration(labelText: 'Fornecedor'),
                 validator: (value) => value?.isEmpty ?? true ? 'Campo obrigatório' : null,
               ),
-              const SizedBox(height: 16.0),
-              if (_imagem == null)
-                ElevatedButton(
-                  onPressed: _pickImage,
-                  child: const Text('Tirar Foto'),
-                )
-              else
-                Column(
-                  children: [
-                    Image.file(_imagem!),
-                    TextButton(
-                      onPressed: _pickImage,
-                      child: const Text('Retirar Foto'),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: _pickImage,
+                child: const Text('Tirar Foto da Peça'),
+              ),
+              if (_imagem != null) Image.file(_imagem!),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _submitForm,
                 child: const Text('Cadastrar'),
