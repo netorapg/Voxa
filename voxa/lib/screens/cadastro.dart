@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class Cadastro extends StatefulWidget {
-  const Cadastro({Key? key}) : super(key: key);
+  const Cadastro({super.key});
 
   @override
   _CadastroState createState() => _CadastroState();
@@ -254,7 +254,7 @@ class _CadastroState extends State<Cadastro> {
     );
   }
 
-  List<String> _selectedSizes = [];
+  final List<String> _selectedSizes = [];
   String _selectedTamanhos = '';
 
   void _toggleSize(String size) {
