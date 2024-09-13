@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voxa/models/item.dart';
+import 'package:voxa/aplicacao/a_item.dart';
 import 'dart:io';
 
 void main() {

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:voxa/widget/rota.dart';
-import 'package:voxa/screens/estoque.dart';
+import 'package:voxa/screens/home.dart';
 import 'package:voxa/screens/info.dart';
 import 'package:voxa/screens/cadastro.dart';
 
