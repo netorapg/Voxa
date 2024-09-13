@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class DTOItem {
-  final int  id;
+  late final int  id;
   final String tipo;
   final String tamanhos;
   final String cor;
