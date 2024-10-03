@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:voxa/aplicacao/a_item.dart';
+import 'package:voxa/dominio/item.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
