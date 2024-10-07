@@ -44,6 +44,42 @@ void main() {
       item.dao = daoItemFake;
     });
 
+    test('id não pode ser nulo', () {
+      expect(() => Item(id: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('tipo não pode ser nulo', () {
+      expect(() => Item(tipo: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('tamanhos não pode ser nulo', () {
+      expect(() => Item(tamanhos: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('cor não pode ser nulo', () {
+      expect(() => Item(cor: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('marca não pode ser nulo', () {
+      expect(() => Item(marca: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('material não pode ser nulo', () {
+      expect(() => Item(material: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('quantidadeEmEstoque não pode ser nulo', () {
+      expect(() => Item(quantidadeEmEstoque: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('fornecedor não pode ser nulo', () {
+      expect(() => Item(fornecedor: null, dao: daoItemFake), throwsAssertionError);
+    });
+
+    test('imagem não pode ser nulo', () {
+      expect(() => Item(imagem: null, dao: daoItemFake), throwsAssertionError);
+    });
+
     test('Item deve ser criado de DTOItem', () {
       expect(item.id, dtoItem.id);
       expect(item.tipo, dtoItem.tipo);

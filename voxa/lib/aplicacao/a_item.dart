@@ -8,6 +8,15 @@ class AItem {
 
   AItem({required this.item, required this.dao});
   salvar() {
-    item.incluir();
+    item.salvar();
+  }
+  alterar() {
+    item.alterar();
+  }
+  excluir() {
+    item.excluir();
+  }
+  consultar() {
+    item.consultar();
   }
 }
