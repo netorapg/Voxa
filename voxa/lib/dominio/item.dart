@@ -14,92 +14,136 @@ class Item {
   File? _imagem;
   IDAOItem dao;
 
-  Item({required this.dao});
-
-  validar({required DTOItem dto}) {
-    tipo = dto.tipo;
-    tamanhos = dto.tamanhos;
-    cor = dto.cor;
-    marca = dto.marca;
-    material = dto.material;
-    quantidadeEmEstoque = dto.quantidadeEmEstoque;
-    fornecedor = dto.fornecedor;
-    imagem = dto.imagem;
-  }
-
- /* Item({
-    required this.id,
-    required this.tipo,
-    required this.tamanhos,
-    required this.cor,
-    required this.marca,
-    required this.material,
-    required this.quantidadeEmEstoque,
-    required this.fornecedor,
-    required this.imagem,
+  Item({
     required this.dao,
-  }) : dto = DTOItem(
-          id: id,
-          tipo: tipo,
-          tamanhos: tamanhos,
-          cor: cor,
-          marca: marca,
-          material: material,
-          quantidadeEmEstoque: quantidadeEmEstoque,
-          fornecedor: fornecedor,
-          imagem: imagem,
-        );
-
-
- 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'tipo': tipo,
-      'tamanhos': tamanhos,
-      'cor': cor,
-      'marca': marca,
-      'material': material,
-      'quantidadeEmEstoque': quantidadeEmEstoque,
-      'fornecedor': fornecedor,
-      'imagem': imagem
-    };
+    dynamic id,
+    String? tipo,
+    String? tamanhos,
+    String? cor,
+    String? marca,
+    String? material,
+    int? quantidadeEmEstoque,
+    String? fornecedor,
+    File? imagem,
+  }) {
+    this._id = id;
+    this.tipo = tipo;
+    this.tamanhos = tamanhos;
+    this.cor = cor;
+    this.marca = marca;
+    this.material = material;
+    this.quantidadeEmEstoque = quantidadeEmEstoque;
+    this.fornecedor = fornecedor;
+    this.imagem = imagem;
   }
 
-  factory Item.fromMap(Map<String, dynamic> map, IDAOItem dao) {
-    return Item(
-      id: map['id'],
-      tipo: map['tipo'],
-      tamanhos: map['tamanhos'],
-      cor: map['cor'],
-      marca: map['marca'],
-      material: map['material'],
-      quantidadeEmEstoque: map['quantidadeEmEstoque'],
-      fornecedor: map['fornecedor'],
-      imagem: map['imagem'],
-      dao: dao,  // Passando o dao no fromMap também
-    );
-  } */
+void validar(DTOItem dto, {List<DTOItem> itensExistentes = const []}) {
+  // Validação do tipo
+  if (dto.tipo == null || dto.tipo!.isEmpty) {
+    throw Exception('Tipo não pode ser nulo ou vazio');
+  }
+  
+  // Validação dos tamanhos
+  if (dto.tamanhos == null || dto.tamanhos!.isEmpty) {
+    throw Exception('Tamanhos não podem ser nulos ou vazios');
+  }
+  
+  // Verifica se tamanhos são válidos (letras ou numéricos)
+  if (!RegExp(r'^[A-Za-z0-9, ]+$').hasMatch(dto.tamanhos!)) {
+    throw Exception('Tamanhos devem ser letras ou números separados por vírgula');
+  }
+
+  // Validação da cor
+  if (dto.cor == null || dto.cor!.isEmpty) {
+    throw Exception('Cor não pode ser nula ou vazia');
+  }
+
+  // Validação da marca
+  if (dto.marca == null || dto.marca!.isEmpty) {
+    throw Exception('Marca não pode ser nula ou vazia');
+  }
+
+  // Validação do material
+  if (dto.material == null || dto.material!.isEmpty) {
+    throw Exception('Material não pode ser nulo ou vazio');
+  }
+
+  // Validação da quantidade em estoque
+  if (dto.quantidadeEmEstoque == null || 
+      dto.quantidadeEmEstoque! < 0 || 
+      dto.quantidadeEmEstoque is! int) {
+    throw Exception('Quantidade em estoque deve ser um número inteiro não negativo');
+  }
+  
+  // Validação do fornecedor
+  if (dto.fornecedor == null || dto.fornecedor!.isEmpty) {
+    throw Exception('Fornecedor não pode ser nulo ou vazio');
+  }
+
+  // Validação da imagem
+  if (dto.imagem == null) {
+    throw Exception('Imagem não pode ser nula');
+  }
+
+  // Impedir cadastro de peças duplicadas
+  for (var item in itensExistentes) {
+    if (item.tipo == dto.tipo &&
+        item.tamanhos == dto.tamanhos &&
+        item.cor == dto.cor &&
+        item.marca == dto.marca &&
+        item.material == dto.material) {
+      throw Exception('A peça já está cadastrada no sistema com as mesmas características.');
+    }
+  }
+}
+
+
+
   Future<DTOItem> salvar() async {
-    validar(dto: dto);
+    final dto = DTOItem(
+      id: _id,
+      tipo: _tipo,
+      tamanhos: _tamanhos,
+      cor: _cor,
+      marca: _marca,
+      material: _material,
+      quantidadeEmEstoque: _quantidadeEmEstoque,
+      fornecedor: _fornecedor,
+      imagem: _imagem,
+    );
+    validar(dto);
     return await dao.salvar(dto);
   }
 
   Future<DTOItem> alterar() async {
-    this.id = id;
-    await dao.alterarElementosDoItem(_id);
+    if (_id == null) throw Exception('ID não pode ser nulo para alterar');
+    
+    final dto = DTOItem(
+      id: _id,
+      tipo: _tipo,
+      tamanhos: _tamanhos,
+      cor: _cor,
+      marca: _marca,
+      material: _material,
+      quantidadeEmEstoque: _quantidadeEmEstoque,
+      fornecedor: _fornecedor,
+      imagem: _imagem,
+    );
+    
+    validar(dto);
+    return await dao.alterar(dto);
   }
 
   Future<bool> excluir() async {
-    this.id = id;
-    await dao.excluir(_id);
-    return true;
+    if (_id == null) throw Exception('ID não pode ser nulo para excluir');
+    return await dao.excluir(_id);
   }
 
   Future<List<DTOItem>> consultar() async {
     return await dao.consultar();
   }
 
+  // Getters
   String? get tipo => _tipo;
   String? get tamanhos => _tamanhos;
   String? get cor => _cor;
@@ -109,96 +153,67 @@ class Item {
   String? get fornecedor => _fornecedor;
   File? get imagem => _imagem;
 
-  set id( int id) {
-    if (id == null) {
-      throw Exception('ID não pode ser nulo');
-    }
-    if(id < 0){
-      throw Exception('ID não pode ser negativo');
+  // Setters com validações
+  set id(dynamic id) {
+    if (id == null || (id is int && id < 0)) {
+      throw Exception('ID não pode ser nulo ou negativo');
     }
     _id = id;
   }
 
   set tipo(String? tipo) {
-    if (tipo == null) {
-      throw Exception('Tipo não pode ser nulo');
-    }
-    if (tipo.isEmpty) {
-      throw Exception('Tipo não pode ser vazio');
+    if (tipo == null || tipo.isEmpty) {
+      throw Exception('Tipo não pode ser nulo ou vazio');
     }
     _tipo = tipo;
   }
 
   set tamanhos(String? tamanhos) {
-    if (tamanhos == null) {
-      throw Exception('Tamanhos não pode ser nulo');
-    }
-    if (tamanhos.isEmpty) {
-      throw Exception('Tamanhos não pode ser vazio');
+    if (tamanhos == null || tamanhos.isEmpty) {
+      throw Exception('Tamanhos não pode ser nulo ou vazio');
     }
     _tamanhos = tamanhos;
   }
 
   set cor(String? cor) {
-    if (cor == null) {
-      throw Exception('Cor não pode ser nulo');
-    }
-    if (cor.isEmpty) {
-      throw Exception('Cor não pode ser vazio');
+    if (cor == null || cor.isEmpty) {
+      throw Exception('Cor não pode ser nula ou vazia');
     }
     _cor = cor;
   }
 
   set marca(String? marca) {
-    if (marca == null) {
-      throw Exception('Marca não pode ser nulo');
-    }
-    if (marca.isEmpty) {
-      throw Exception('Marca não pode ser vazio');
+    if (marca == null || marca.isEmpty) {
+      throw Exception('Marca não pode ser nula ou vazia');
     }
     _marca = marca;
   }
 
   set material(String? material) {
-    if (material == null) {
-      throw Exception('Material não pode ser nulo');
-    }
-    if (material.isEmpty) {
-      throw Exception('Material não pode ser vazio');
+    if (material == null || material.isEmpty) {
+      throw Exception('Material não pode ser nulo ou vazio');
     }
     _material = material;
   }
 
   set quantidadeEmEstoque(int? quantidadeEmEstoque) {
-    if (quantidadeEmEstoque == null) {
-      throw Exception('Quantidade em estoque não pode ser nulo');
-    }
-    if (quantidadeEmEstoque < 0) {
-      throw Exception('Quantidade em estoque não pode ser negativo');
+    if (quantidadeEmEstoque == null || quantidadeEmEstoque < 0) {
+      throw Exception('Quantidade em estoque não pode ser nula ou negativa');
     }
     _quantidadeEmEstoque = quantidadeEmEstoque;
   }
 
   set fornecedor(String? fornecedor) {
-    if (fornecedor == null) {
-      throw Exception('Fornecedor não pode ser nulo');
-    }
-    if (fornecedor.isEmpty) {
-      throw Exception('Fornecedor não pode ser vazio');
+    if (fornecedor == null || fornecedor.isEmpty) {
+      throw Exception('Fornecedor não pode ser nulo ou vazio');
     }
     _fornecedor = fornecedor;
   }
 
   set imagem(File? imagem) {
     if (imagem == null) {
-      throw Exception('Imagem não pode ser nulo');
+      throw Exception('Imagem não pode ser nula');
     }
     _imagem = imagem;
   }
-
-
-
-
-
-
 }

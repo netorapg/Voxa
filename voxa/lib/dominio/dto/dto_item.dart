@@ -1,24 +1,25 @@
 import 'dart:io';
 
 class DTOItem {
-  dynamic  id;
-  final String? tipo;
-  final String? tamanhos;
-  final String? cor;
-  final String? marca;
-  final String? material;
-  final int? quantidadeEmEstoque;
-  final String? fornecedor;
-  final File? imagem;
+  int? id;
+  String? tipo;
+  String? tamanhos;
+  String? cor;
+  String? marca;
+  String? material;
+  int? quantidadeEmEstoque;
+  String? fornecedor;
+  File? imagem;
+
   DTOItem({
-    required this.id,
-    required this.tipo,
-    required this.tamanhos,
-    required this.cor,
-    required this.marca,
-    required this.material,
-    required this.quantidadeEmEstoque,
-    required this.fornecedor,
-    required this.imagem
+    this.id,
+    this.tipo,
+    this.tamanhos,
+    this.cor,
+    this.marca,
+    this.material,
+    this.quantidadeEmEstoque,
+    this.fornecedor,
+    this.imagem,
   });
 }
