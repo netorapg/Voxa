@@ -13,7 +13,7 @@ class Fornecedor {
     String? nome,
     String? contato,
   }) {
-    this._id = id;
+    _id = id;
     this.nome = nome;
     this.contato = contato;
   }

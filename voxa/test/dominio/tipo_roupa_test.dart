@@ -20,6 +20,7 @@ void main() {
 
     test('Deve alterar um tipo de roupa com sucesso', () async {
       var dto = await tipoRoupa.salvar();
+      tipoRoupa.id = 1;
       tipoRoupa.nome = 'Camiseta Manga Longa';
       var atualizado = await tipoRoupa.alterar();
       expect(atualizado.nome, equals('Camiseta Manga Longa'));
@@ -27,6 +28,7 @@ void main() {
 
     test('Deve excluir um tipo de roupa com sucesso', () async {
       var dto = await tipoRoupa.salvar();
+      tipoRoupa.id = 1;
       var resultado  = await tipoRoupa.excluir();
       expect(resultado, isTrue);
     });
@@ -42,7 +44,7 @@ void main() {
       expect(lista[1].nome, equals("Calça"));
     });
 
-    test('Deve lançar excelção ao tentar alterar sem ID', () async {
+    test('Deve lançar exceção ao tentar alterar sem ID', () async {
       expect(() => tipoRoupa.alterar(), throwsException);
     });
 

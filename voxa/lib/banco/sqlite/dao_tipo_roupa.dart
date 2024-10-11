@@ -3,7 +3,7 @@ import 'package:voxa/dominio/dto/dto_tipo.dart';
 import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 
 class DAOTipoRoupaMemoria implements IDAOTipoRoupa {
-  List<DTOTipoRoupa> _itens = [];
+  final List<DTOTipoRoupa> _itens = [];
   int _nextId = 1;
 
   @override

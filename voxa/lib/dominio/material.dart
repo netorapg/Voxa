@@ -11,7 +11,7 @@ class MaterialRoupa {
     dynamic id,
     String? nome,
   }) {
-    this._id = id;
+    _id = id;
     this.nome = nome;
   }
 

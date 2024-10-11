@@ -21,12 +21,14 @@ void main() {
     test('Deve alterar uma cor com sucesso', () async {
       var dto = await corRoupa.salvar();
       corRoupa.nome = 'Verde';
+      corRoupa.id = 1;
       var atualizado = await corRoupa.alterar();
       expect(atualizado.nome, equals('Verde'));
     });
 
     test('Deve excluir uma cor com sucesso', () async {
       var dto = await corRoupa.salvar();
+      corRoupa.id = 1;
       var resultado = await corRoupa.excluir();
       expect(resultado, isTrue);
     });

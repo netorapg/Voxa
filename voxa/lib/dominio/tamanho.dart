@@ -11,14 +11,22 @@ class TamanhoRoupa {
     dynamic id,
     String? nome,
   }) {
-    this._id = id;
+    _id = id;
     this.nome = nome;
   }
 
   void validar(DTOTamanho dto) {
-    // Validação do nome
-    if (dto.nome == null || dto.nome!.isEmpty) {
-      throw Exception('Nome não pode ser nulo ou vazio');
+    if (dto.nome == null) {
+      throw Exception('Nome não pode ser nulo');
+    }
+    if (dto.nome!.isEmpty) {
+      throw Exception('Nome não pode ser vazio');
+    }
+    if (_contemSimbolos(dto.nome!)) {
+      throw Exception('Nome deve conter apenas letras ou apenas números, sem símbolos ou combinações');
+    }
+    if (_contemCombinacao(dto.nome!)) {
+      throw Exception('Nome não pode ter combinação de letras e numeros');
     }
   }
 
@@ -55,7 +63,7 @@ class TamanhoRoupa {
   // Getters
   String? get nome => _nome;
 
-  // Setters com validações
+  // Setters
   set id(dynamic id) {
     if (id == null || (id is int && id < 0)) {
       throw Exception('ID não pode ser nulo ou negativo');
@@ -67,6 +75,22 @@ class TamanhoRoupa {
     if (nome == null || nome.isEmpty) {
       throw Exception('Nome não pode ser nulo ou vazio');
     }
+    
+    // Usando _contemSimbolos para validar o nome
+    if (_contemSimbolos(nome)) {
+      throw Exception('Nome deve conter apenas letras ou apenas números, sem símbolos ou combinações');
+    }
+
     _nome = nome;
+  }
+
+  bool _contemSimbolos(String nome) {
+    final regex = RegExp(r'[^\w\s]'); // Verifica se contém símbolos
+    return regex.hasMatch(nome);
+  }
+
+  bool _contemCombinacao(String nome) {
+    final regex = RegExp(r'^[a-zA-Z]+$'r'^[0-9]+$');
+    return regex.hasMatch(nome);
   }
 }

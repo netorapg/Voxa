@@ -23,6 +23,7 @@ void main() {
       var dto = await fornecedor.salvar();
       fornecedor.nome = 'Fornecedor B';
       fornecedor.contato = 'contatoB@fornecedor.com';
+      fornecedor.id = 1;
       var atualizado = await fornecedor.alterar();
       expect(atualizado.nome, equals('Fornecedor B'));
       expect(atualizado.contato, equals('contatoB@fornecedor.com'));
@@ -30,6 +31,7 @@ void main() {
 
     test('Deve excluir um fornecedor com sucesso', () async {
       var dto = await fornecedor.salvar();
+      fornecedor.id = 1;
       var resultado = await fornecedor.excluir();
       expect(resultado, isTrue);
     });

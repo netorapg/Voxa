@@ -5,11 +5,13 @@ import 'package:voxa/dominio/tamanho.dart';
 void main() {
   group('TamanhoRoupa', () {
     late TamanhoRoupa tamanhoRoupa;
+    late TamanhoRoupa tamanhoRoupa2;
     late DAOTamanhoMemoria dao;
 
     setUp(() {
       dao = DAOTamanhoMemoria();
       tamanhoRoupa = TamanhoRoupa(dao: dao, nome: "M");
+      tamanhoRoupa2 = TamanhoRoupa(dao: dao, nome: "48");
     });
 
     test('Deve salvar um tamanho de roupa com sucesso', () async {
@@ -18,8 +20,27 @@ void main() {
       expect(dto.id, isNotNull);
     });
 
+    test('Deve salvar um tamanho que seja número com sucesso', () async {
+      var dto = await tamanhoRoupa2.salvar();
+      expect(dto.nome, equals('48'));
+      expect(dto.id, isNotNull);
+    });
+
+  test('Não deve salvar se for um símbolo', () async {
+  TamanhoRoupa tamanhoRoupaSimbolo = TamanhoRoupa(dao: dao, nome: "%");
+   expect(() => tamanhoRoupaSimbolo.salvar(), throwsException);  
+  
+});
+
+
+    test('Não deve salvar se for uma combinação de letras e números', () async {
+      TamanhoRoupa tamanhoRoupaInvalido = TamanhoRoupa(dao: dao, nome: "M48");
+      expect(() => tamanhoRoupaInvalido.salvar(), throwsException);
+    });
+
     test('Deve alterar um tamanho de roupa com sucesso', () async {
       var dto = await tamanhoRoupa.salvar();
+      tamanhoRoupa.id = dto.id;
       tamanhoRoupa.nome = 'G';
       var atualizado = await tamanhoRoupa.alterar();
       expect(atualizado.nome, equals('G'));
@@ -27,6 +48,7 @@ void main() {
 
     test('Deve excluir um tamanho de roupa com sucesso', () async {
       var dto = await tamanhoRoupa.salvar();
+      tamanhoRoupa.id = dto.id;
       var resultado = await tamanhoRoupa.excluir();
       expect(resultado, isTrue);
     });
@@ -43,11 +65,13 @@ void main() {
     });
 
     test('Deve lançar exceção ao tentar alterar sem ID', () async {
-      expect(() => tamanhoRoupa.alterar(), throwsException);
+      var novoTamanhoRoupa = TamanhoRoupa(dao: dao, nome: "G");
+      expect(() => novoTamanhoRoupa.alterar(), throwsException);
     });
 
     test('Deve lançar exceção ao tentar excluir sem ID', () async {
-      expect(() => tamanhoRoupa.excluir(), throwsException);
+      var novoTamanhoRoupa = TamanhoRoupa(dao: dao, nome: "P");
+      expect(() => novoTamanhoRoupa.excluir(), throwsException);
     });
   });
 }
