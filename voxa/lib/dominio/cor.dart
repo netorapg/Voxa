@@ -3,22 +3,21 @@ import 'package:voxa/dominio/interface/i_dao_cor.dart';
 
 class CorRoupa {
   dynamic _id;
-  String? _nome;
+  String _nome;
   IDAOCor dao;
 
   CorRoupa({
     required this.dao,
     dynamic id,
-    String? nome,
-  }) {
+    required String nome,
+  }) : _nome = nome {
     _id = id;
-    this.nome = nome;
   }
 
   void validar(DTOCor dto) {
     // Validação do nome
-    if (dto.nome == null || dto.nome!.isEmpty) {
-      throw Exception('Nome não pode ser nulo ou vazio');
+    if (dto.nome.isEmpty) {
+      throw Exception('Nome não pode ser vazio');
     }
   }
 

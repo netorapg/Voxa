@@ -3,37 +3,33 @@ import 'package:voxa/dominio/interface/i_dao_tamanho.dart';
 
 class TamanhoRoupa {
   dynamic _id;
-  String? _nome;
+  String _nome; // Mude para String não nulo
   IDAOTamanho dao;
 
   TamanhoRoupa({
     required this.dao,
     dynamic id,
-    String? nome,
-  }) {
+    required String nome, // Torne o parâmetro nome obrigatório
+  })  : _nome = nome {
     _id = id;
-    this.nome = nome;
   }
 
   void validar(DTOTamanho dto) {
-    if (dto.nome == null) {
-      throw Exception('Nome não pode ser nulo');
-    }
-    if (dto.nome!.isEmpty) {
+    if (dto.nome.isEmpty) { // dto.nome não pode ser nulo aqui
       throw Exception('Nome não pode ser vazio');
     }
-    if (_contemSimbolos(dto.nome!)) {
-      throw Exception('Nome deve conter apenas letras ou apenas números, sem símbolos ou combinações');
+    if (_contemSimbolos(dto.nome)) {
+      throw Exception('Nome não deve conter simbolos');
     }
-    if (_contemCombinacao(dto.nome!)) {
-      throw Exception('Nome não pode ter combinação de letras e numeros');
+    if (_contemCombinacao(dto.nome)) {
+      throw Exception('Nome não pode ter combinação de letras e números');
     }
   }
 
   Future<DTOTamanho> salvar() async {
     final dto = DTOTamanho(
       id: _id,
-      nome: _nome,
+      nome: _nome, // Passa _nome que não é nulo
     );
     validar(dto);
     return await dao.salvar(dto);
@@ -44,7 +40,7 @@ class TamanhoRoupa {
 
     final dto = DTOTamanho(
       id: _id,
-      nome: _nome,
+      nome: _nome, // Passa _nome que não é nulo
     );
 
     validar(dto);
@@ -61,7 +57,7 @@ class TamanhoRoupa {
   }
 
   // Getters
-  String? get nome => _nome;
+  String get nome => _nome; // Ajusta o getter
 
   // Setters
   set id(dynamic id) {
@@ -71,26 +67,27 @@ class TamanhoRoupa {
     _id = id;
   }
 
-  set nome(String? nome) {
-    if (nome == null || nome.isEmpty) {
+  set nome(String nome) { // Nome não pode ser nulo
+    if (nome.isEmpty) {
       throw Exception('Nome não pode ser nulo ou vazio');
     }
-    
-    // Usando _contemSimbolos para validar o nome
+
     if (_contemSimbolos(nome)) {
-      throw Exception('Nome deve conter apenas letras ou apenas números, sem símbolos ou combinações');
+      throw Exception('Nome não deve conter simbolos');
     }
 
-    _nome = nome;
+    _nome = nome; // Atribui diretamente porque não é mais nulo
   }
 
   bool _contemSimbolos(String nome) {
-    final regex = RegExp(r'[^\w\s]'); // Verifica se contém símbolos
+    final regex = RegExp(r'[^\w\s]');
     return regex.hasMatch(nome);
   }
 
   bool _contemCombinacao(String nome) {
-    final regex = RegExp(r'^[a-zA-Z]+$'r'^[0-9]+$');
-    return regex.hasMatch(nome);
+    final letras = RegExp(r'[a-zA-Z]');
+    final numeros = RegExp(r'[0-9]');
+    
+    return letras.hasMatch(nome) && numeros.hasMatch(nome);
   }
 }

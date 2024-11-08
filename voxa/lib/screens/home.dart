@@ -8,17 +8,18 @@ class Estoque extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 62, 110, 65),
       appBar: AppBar(title: const Text('Voxa')),
       body: Column(
         children: [
           Utilitarios().criarBotaoDeNavegacao(
-              nome: 'Informações do produto',
+              nome: 'Cor de Roupa',
               contexto: context,
-              rota: Rota.info),
+              rota: Rota.cor),
           Utilitarios().criarBotaoDeNavegacao(
-              nome: 'Cadastrar Novo Produto',
+              nome: 'Tamanho de Roupa',
               contexto: context,
-              rota: Rota.cadastro),
+              rota: Rota.tamanhoTela),
          // Utilitarios().criarTabela(),
         ],
       ),

@@ -26,17 +26,18 @@ void main() {
       expect(dto.id, isNotNull);
     });
 
-  test('Não deve salvar se for um símbolo', () async {
+test('Não deve salvar se for um símbolo', () async {
   TamanhoRoupa tamanhoRoupaSimbolo = TamanhoRoupa(dao: dao, nome: "%");
-   expect(() => tamanhoRoupaSimbolo.salvar(), throwsException);  
-  
+  expect(() => tamanhoRoupaSimbolo.salvar(), throwsException);
 });
 
 
-    test('Não deve salvar se for uma combinação de letras e números', () async {
-      TamanhoRoupa tamanhoRoupaInvalido = TamanhoRoupa(dao: dao, nome: "M48");
-      expect(() => tamanhoRoupaInvalido.salvar(), throwsException);
-    });
+
+   test('Não deve salvar se for uma combinação de letras e números', () async {
+  TamanhoRoupa tamanhoRoupaInvalido = TamanhoRoupa(dao: dao, nome: "M48");
+  expect(() => tamanhoRoupaInvalido.salvar(), throwsException);
+});
+
 
     test('Deve alterar um tamanho de roupa com sucesso', () async {
       var dto = await tamanhoRoupa.salvar();
