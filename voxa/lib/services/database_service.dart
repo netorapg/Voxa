@@ -55,7 +55,7 @@ class CorDatabaseService implements IDAOCor {
   Future<DTOCor> salvar(DTOCor dto) async {
     final db = await Conexao.iniciar(); // Inicia a conexão com o banco
     final id = await db.insert('cores', dto.toMap());
-    return DTOCor(id: id, nome: dto.nome); // Retorna o DTO com o novo ID gerado
+    return DTOCor(id: id, nome: dto.nome, corHex: dto.corHex); // Retorna o DTO com o novo ID gerado
   }
 
   @override

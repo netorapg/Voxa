@@ -12,10 +12,10 @@ class CorTela extends StatefulWidget {
 
 class _CorTelaState extends State<CorTela> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nomeController = TextEditingController();
   CorRoupa? _corRoupa;
   List<DTOCor> _listaCor = [];
   Color _currentColor = Colors.blue; // Cor padrão inicial
+  String _corNome = 'Blue'; // Nome da cor inicial
 
   @override
   void initState() {
@@ -37,8 +37,8 @@ class _CorTelaState extends State<CorTela> {
   Future<void> _salvarCor() async {
     if (_formKey.currentState!.validate()) {
       try {
-        _corRoupa?.nome = _nomeController.text;
-        _corRoupa?.corHex = _currentColor.value.toRadixString(16); // Salvando cor em formato hexadecimal
+        _corRoupa?.nome = _corNome;
+        _corRoupa?.corHex = _currentColor.value.toRadixString(16);
         await _corRoupa?.salvar();
         _consultarCor();
         _limparCampos();
@@ -48,32 +48,10 @@ class _CorTelaState extends State<CorTela> {
     }
   }
 
-  Future<void> _alterarCor(DTOCor cor) async {
-    try {
-      _corRoupa?.id = cor.id;
-      _corRoupa?.nome = _nomeController.text;
-      _corRoupa?.corHex = _currentColor.value.toRadixString(16);
-      await _corRoupa?.alterar();
-      _consultarCor();
-    } catch (e) {
-      _mostrarErro(e.toString());
-    }
-  }
-
-  Future<void> _excluirCor(dynamic id) async {
-    try {
-      await _corRoupa?.excluir();
-      _consultarCor();
-    } catch (e) {
-      _mostrarErro(e.toString());
-    }
-  }
-
   void _limparCampos() {
-    _nomeController.clear();
-    _corRoupa?.id = null;
     setState(() {
       _currentColor = Colors.blue;
+      _corNome = 'Blue';
     });
   }
 
@@ -83,7 +61,23 @@ class _CorTelaState extends State<CorTela> {
     );
   }
 
-  // Método para abrir o ColorPicker
+  // Mapeia a cor selecionada para um nome comum, se disponível
+  String _getColorName(Color color) {
+    Map<Color, String> colorNames = {
+      Colors.red: 'Red',
+      Colors.green: 'Green',
+      Colors.blue: 'Blue',
+      Colors.yellow: 'Yellow',
+      Colors.orange: 'Orange',
+      Colors.purple: 'Purple',
+      Colors.black: 'Black',
+      Colors.white: 'White',
+      // Adicione outras cores conforme necessário
+    };
+    return colorNames[color] ?? 'Custom Color';
+  }
+
+  // Método para abrir o ColorPicker e definir o nome da cor
   void _showColorPicker() {
     showDialog(
       context: context,
@@ -91,15 +85,14 @@ class _CorTelaState extends State<CorTela> {
         return AlertDialog(
           title: const Text('Selecione a Cor'),
           content: SingleChildScrollView(
-            child: ColorPicker(
+            child: BlockPicker(
               pickerColor: _currentColor,
               onColorChanged: (Color color) {
                 setState(() {
                   _currentColor = color;
+                  _corNome = _getColorName(color);
                 });
               },
-              showLabel: true,
-              pickerAreaHeightPercent: 0.8,
             ),
           ),
           actions: <Widget>[
@@ -129,17 +122,6 @@ class _CorTelaState extends State<CorTela> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
-                    controller: _nomeController,
-                    decoration: const InputDecoration(labelText: 'Nome da Cor'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira um nome';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
                   Row(
                     children: [
                       GestureDetector(
@@ -151,6 +133,11 @@ class _CorTelaState extends State<CorTela> {
                         ),
                       ),
                       const SizedBox(width: 16),
+                      Text(
+                        _corNome,
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const Spacer(),
                       ElevatedButton(
                         onPressed: _salvarCor,
                         child: const Text('Salvar'),
@@ -179,7 +166,7 @@ class _CorTelaState extends State<CorTela> {
                         IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            _nomeController.text = cor.nome;
+                            _corNome = cor.nome;
                             _currentColor = Color(int.parse(cor.corHex, radix: 16) | 0xFF000000);
                             _alterarCor(cor);
                           },
