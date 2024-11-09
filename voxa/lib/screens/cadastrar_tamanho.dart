@@ -5,7 +5,7 @@ import 'package:voxa/services/database_service.dart';
 class AdicionarTamanhoPage extends StatelessWidget {
   final TamanhoRoupaDatabaseService dao;
 
-  AdicionarTamanhoPage({super.key, required this.dao, required DTOTamanho tamanho});
+  AdicionarTamanhoPage({super.key, required this.dao, required DTOTamanho? tamanho});
 
   final TextEditingController _nomeController = TextEditingController();
 

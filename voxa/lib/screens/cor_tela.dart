@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:voxa/dominio/dto/dto_cor.dart';
-import 'package:voxa/dominio/interface/i_dao_cor.dart';
 import 'package:voxa/dominio/cor.dart';
 
 class CorTela extends StatefulWidget {
-
   const CorTela({super.key});
 
   @override
@@ -16,6 +15,7 @@ class _CorTelaState extends State<CorTela> {
   final TextEditingController _nomeController = TextEditingController();
   CorRoupa? _corRoupa;
   List<DTOCor> _listaCor = [];
+  Color _currentColor = Colors.blue; // Cor padrão inicial
 
   @override
   void initState() {
@@ -38,6 +38,7 @@ class _CorTelaState extends State<CorTela> {
     if (_formKey.currentState!.validate()) {
       try {
         _corRoupa?.nome = _nomeController.text;
+        _corRoupa?.corHex = _currentColor.value.toRadixString(16); // Salvando cor em formato hexadecimal
         await _corRoupa?.salvar();
         _consultarCor();
         _limparCampos();
@@ -51,6 +52,7 @@ class _CorTelaState extends State<CorTela> {
     try {
       _corRoupa?.id = cor.id;
       _corRoupa?.nome = _nomeController.text;
+      _corRoupa?.corHex = _currentColor.value.toRadixString(16);
       await _corRoupa?.alterar();
       _consultarCor();
     } catch (e) {
@@ -70,11 +72,46 @@ class _CorTelaState extends State<CorTela> {
   void _limparCampos() {
     _nomeController.clear();
     _corRoupa?.id = null;
+    setState(() {
+      _currentColor = Colors.blue;
+    });
   }
 
   void _mostrarErro(String mensagem) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(mensagem)),
+    );
+  }
+
+  // Método para abrir o ColorPicker
+  void _showColorPicker() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Selecione a Cor'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: _currentColor,
+              onColorChanged: (Color color) {
+                setState(() {
+                  _currentColor = color;
+                });
+              },
+              showLabel: true,
+              pickerAreaHeightPercent: 0.8,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Selecionar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -103,9 +140,22 @@ class _CorTelaState extends State<CorTela> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _salvarCor,
-                    child: const Text('Salvar'),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: _showColorPicker,
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          color: _currentColor,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: _salvarCor,
+                        child: const Text('Salvar'),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -118,6 +168,11 @@ class _CorTelaState extends State<CorTela> {
                   final cor = _listaCor[index];
                   return ListTile(
                     title: Text(cor.nome),
+                    leading: Container(
+                      width: 20,
+                      height: 20,
+                      color: Color(int.parse(cor.corHex, radix: 16) | 0xFF000000),
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -125,6 +180,7 @@ class _CorTelaState extends State<CorTela> {
                           icon: const Icon(Icons.edit),
                           onPressed: () {
                             _nomeController.text = cor.nome;
+                            _currentColor = Color(int.parse(cor.corHex, radix: 16) | 0xFF000000);
                             _alterarCor(cor);
                           },
                         ),

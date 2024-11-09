@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/dominio/dto/dto_tamanho.dart';
+import 'package:voxa/dominio/interface/i_dao_tamanho.dart';
 import 'package:voxa/screens/cadastrar_tamanho.dart';
-import 'package:voxa/services/database_service.dart'; // Ajuste o caminho conforme necessário
+import 'package:voxa/services/database_service.dart';
+import 'package:voxa/dominio/tamanho.dart';
+import 'package:voxa/aplicacao/a_tamanho.dart';
 
 class TamanhoListPage extends StatefulWidget {
+
   const TamanhoListPage({super.key});
 
   @override
@@ -28,13 +32,61 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
     try {
       _tamanhos = await _dao.consultar();
     } catch (e) {
-      // Trate o erro, se necessário
       print('Erro ao carregar tamanhos: $e');
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _excluirTamanho(int id) async {
+    try {
+      await _dao.excluir(id);
+      _carregarTamanhos(); // Atualiza a lista após exclusão
+    } catch (e) {
+      print('Erro ao excluir tamanho: $e');
+    }
+  }
+
+  void _editarTamanho(DTOTamanho tamanho) {
+    showDialog(
+      context: context,
+      builder: (context) {
+      final TextEditingController nomeController = TextEditingController(text: tamanho.nome);
+
+      return AlertDialog(
+        title: const Text('Editar Tamanho'),
+        content: TextField(
+        controller: nomeController,
+        decoration: const InputDecoration(labelText: 'Nome'),
+        ),
+        actions: [
+        TextButton(
+          onPressed: () {
+          Navigator.of(context).pop();
+          },
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () async {
+          final String novoNome = nomeController.text;
+          if (novoNome.isNotEmpty) {
+            try {
+            await _dao.alterar(DTOTamanho(id: tamanho.id, nome: novoNome));
+            _carregarTamanhos();
+            Navigator.of(context).pop();
+            } catch (e) {
+            print('Erro ao atualizar tamanho: $e');
+            }
+          }
+          },
+          child: const Text('Salvar'),
+        ),
+        ],
+      );
+      },
+    );
   }
 
   @override
@@ -52,26 +104,35 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
                 return ListTile(
                   title: Text(tamanho.nome),
                   subtitle: Text('ID: ${tamanho.id}'),
-                  // Adicione ações, se necessário
-                  onTap: () {
-                    // Aqui você pode adicionar lógica para editar ou excluir o tamanho
-                  },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _editarTamanho(tamanho),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _excluirTamanho(tamanho.id!),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
-     floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => AdicionarTamanhoPage(dao: _dao)),
-    ).then((_) {
-      // Recarregue a lista após adicionar um novo tamanho
-      _carregarTamanhos();
-    });
-  },
-  child: const Icon(Icons.add),
-),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdicionarTamanhoPage(dao: _dao, tamanho: null),
+            ),
+          ).then((_) {
+            _carregarTamanhos(); // Recarrega a lista após adicionar um novo tamanho
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
