@@ -5,7 +5,6 @@ import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 
 import 'package:voxa/screens/home.dart';
 import 'package:voxa/screens/tamanho_tela.dart';
-import 'package:voxa/screens/tipo_tela.dart';
 import 'package:voxa/widget/rota.dart';
 
 class App extends StatelessWidget {
@@ -27,7 +26,7 @@ class App extends StatelessWidget {
       routes: {
         Rota.estoque: (context) => const Estoque(),
         Rota.tamanhoTela: (context) => const TamanhoListPage(), // Usa dao ou um padrão
-        Rota.tipo: (context) => const TipoRoupaScreen()
+       // Rota.tipo: (context) => const TipoRoupaScreen()
       },
     );
   }

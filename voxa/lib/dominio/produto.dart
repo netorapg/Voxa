@@ -3,7 +3,7 @@ import 'package:voxa/dominio/dto/dto_produto.dart';
 import 'package:voxa/dominio/interface/i_dao_produto.dart';
 
 class Produto {
-  int? _id;
+  final int? _id;
   int quantidade;
   String foto;
   String corHex;

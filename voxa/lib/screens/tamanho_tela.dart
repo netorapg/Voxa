@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/dominio/dto/dto_tamanho.dart';
-import 'package:voxa/screens/cadastrar_tamanho.dart';
 import 'package:voxa/services/database_service.dart';
 
 class TamanhoListPage extends StatefulWidget {
-
   const TamanhoListPage({super.key});
 
   @override
@@ -50,38 +48,78 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
     showDialog(
       context: context,
       builder: (context) {
-      final TextEditingController nomeController = TextEditingController(text: tamanho.nome);
+        final TextEditingController nomeController = TextEditingController(text: tamanho.nome);
 
-      return AlertDialog(
-        title: const Text('Editar Tamanho'),
-        content: TextField(
-        controller: nomeController,
-        decoration: const InputDecoration(labelText: 'Nome'),
-        ),
-        actions: [
-        TextButton(
-          onPressed: () {
-          Navigator.of(context).pop();
-          },
-          child: const Text('Cancelar'),
-        ),
-        TextButton(
-          onPressed: () async {
-          final String novoNome = nomeController.text;
-          if (novoNome.isNotEmpty) {
-            try {
-            await _dao.alterar(DTOTamanho(id: tamanho.id, nome: novoNome));
-            _carregarTamanhos();
-            Navigator.of(context).pop();
-            } catch (e) {
-            print('Erro ao atualizar tamanho: $e');
-            }
-          }
-          },
-          child: const Text('Salvar'),
-        ),
-        ],
-      );
+        return AlertDialog(
+          title: const Text('Editar Tamanho'),
+          content: TextField(
+            controller: nomeController,
+            decoration: const InputDecoration(labelText: 'Nome'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final String novoNome = nomeController.text;
+                if (novoNome.isNotEmpty) {
+                  try {
+                    await _dao.alterar(DTOTamanho(id: tamanho.id, nome: novoNome));
+                    _carregarTamanhos();
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    print('Erro ao atualizar tamanho: $e');
+                  }
+                }
+              },
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _adicionarTamanho() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController nomeController = TextEditingController();
+
+        return AlertDialog(
+          title: const Text('Adicionar Tamanho'),
+          content: TextField(
+            controller: nomeController,
+            decoration: const InputDecoration(labelText: 'Nome do Tamanho'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final String nome = nomeController.text;
+                if (nome.isNotEmpty) {
+                  try {
+                    await _dao.salvar(DTOTamanho(nome: nome));
+                    _carregarTamanhos();
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    print('Erro ao adicionar tamanho: $e');
+                  }
+                }
+              },
+              child: const Text('Salvar'),
+            ),
+          ],
+        );
       },
     );
   }
@@ -118,16 +156,7 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AdicionarTamanhoPage(dao: _dao, tamanho: null),
-            ),
-          ).then((_) {
-            _carregarTamanhos(); // Recarrega a lista após adicionar um novo tamanho
-          });
-        },
+        onPressed: _adicionarTamanho,
         child: const Icon(Icons.add),
       ),
     );
