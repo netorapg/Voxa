@@ -1,7 +1,7 @@
 import 'package:voxa/dominio/dto/dto_tamanho.dart';
 import 'package:voxa/dominio/interface/i_dao_tamanho.dart';
-import 'package:voxa/dominio/dto/dto_cor.dart';
-import 'package:voxa/dominio/interface/i_dao_cor.dart';
+import 'package:voxa/dominio/dto/dto_tipo.dart';
+import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 import 'package:voxa/banco/sqlite/conexao.dart'; // Importa a classe de conexão
 
 class TamanhoRoupaDatabaseService implements IDAOTamanho {
@@ -47,19 +47,19 @@ class TamanhoRoupaDatabaseService implements IDAOTamanho {
 }
 
 
-class CorDatabaseService implements IDAOCor {
+class TipoRoupaDatabaseService implements IDAOTipoRoupa {
   // Construtor da classe
-  CorDatabaseService();
+  TipoRoupaDatabaseService();
 
   @override
-  Future<DTOCor> salvar(DTOCor dto) async {
+  Future<DTOTipoRoupa> salvar(DTOTipoRoupa dto) async {
     final db = await Conexao.iniciar(); // Inicia a conexão com o banco
     final id = await db.insert('cores', dto.toMap());
-    return DTOCor(id: id, nome: dto.nome, corHex: dto.corHex); // Retorna o DTO com o novo ID gerado
+    return DTOTipoRoupa(id: id, nome: dto.nome); // Retorna o DTO com o novo ID gerado
   }
 
   @override
-  Future<DTOCor> alterar(DTOCor dto) async {
+  Future<DTOTipoRoupa> alterar(DTOTipoRoupa dto) async {
     final db = await Conexao.iniciar(); // Inicia a conexão com o banco
     await db.update(
       'cores',
@@ -82,9 +82,9 @@ class CorDatabaseService implements IDAOCor {
   }
 
   @override
-  Future<List<DTOCor>> consultar() async {
+  Future<List<DTOTipoRoupa>> consultar() async {
     final db = await Conexao.iniciar(); // Inicia a conexão com o banco
     final List<Map<String, dynamic>> result = await db.query('cores');
-    return result.map((map) => DTOCor.fromMap(map)).toList(); // Converte o resultado em uma lista de DTOCor
+    return result.map((map) => DTOTipoRoupa.fromMap(map)).toList(); // Converte o resultado em uma lista de DTOCor
   }
 }

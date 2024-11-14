@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/dominio/dto/dto_tamanho.dart';
-import 'package:voxa/dominio/interface/i_dao_tamanho.dart';
 import 'package:voxa/screens/cadastrar_tamanho.dart';
 import 'package:voxa/services/database_service.dart';
-import 'package:voxa/dominio/tamanho.dart';
-import 'package:voxa/aplicacao/a_tamanho.dart';
 
 class TamanhoListPage extends StatefulWidget {
 

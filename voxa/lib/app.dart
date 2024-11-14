@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:voxa/dominio/interface/i_dao_cor.dart';
+
 import 'package:voxa/dominio/interface/i_dao_tamanho.dart'; // Importa a interface do DAO
-import 'package:voxa/screens/cor_tela.dart';
+import 'package:voxa/dominio/interface/i_dao_tipo.dart';
+
 import 'package:voxa/screens/home.dart';
 import 'package:voxa/screens/tamanho_tela.dart';
+import 'package:voxa/screens/tipo_tela.dart';
 import 'package:voxa/widget/rota.dart';
 
 class App extends StatelessWidget {
   final IDAOTamanho? daoTamanho;
-  final IDAOCor? daoCor;
+  final IDAOTipoRoupa? daoTipo;
 
   // O parâmetro dao agora é opcional
-  const App({super.key, this.daoTamanho, this.daoCor});
+  const App({super.key, this.daoTamanho, this.daoTipo});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class App extends StatelessWidget {
       routes: {
         Rota.estoque: (context) => const Estoque(),
         Rota.tamanhoTela: (context) => const TamanhoListPage(), // Usa dao ou um padrão
-        Rota.cor: (context) => const CorTela()
+        Rota.tipo: (context) => const TipoRoupaScreen()
       },
     );
   }

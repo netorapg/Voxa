@@ -13,9 +13,9 @@ class Estoque extends StatelessWidget {
       body: Column(
         children: [
           Utilitarios().criarBotaoDeNavegacao(
-              nome: 'Cor de Roupa',
+              nome: 'Tipo de Roupa',
               contexto: context,
-              rota: Rota.cor),
+              rota: Rota.tipo),
           Utilitarios().criarBotaoDeNavegacao(
               nome: 'Tamanho de Roupa',
               contexto: context,

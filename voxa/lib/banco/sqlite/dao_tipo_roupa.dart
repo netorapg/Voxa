@@ -1,43 +1,34 @@
-
 import 'package:voxa/dominio/dto/dto_tipo.dart';
 import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 
-class DAOTipoRoupaMemoria implements IDAOTipoRoupa {
-  final List<DTOTipoRoupa> _itens = [];
-  int _nextId = 1;
+class DAOTipoMemoria implements IDAOTipoRoupa {
+  final List<DTOTipoRoupa> _tamanhos = [];
 
   @override
   Future<DTOTipoRoupa> salvar(DTOTipoRoupa dto) async {
-    dto.id = _nextId++;
-    _itens.add(dto);
+    dto.id = _tamanhos.length + 1; // Simula um ID auto-incremento
+    _tamanhos.add(dto);
     return dto;
   }
 
-  @override 
+  @override
   Future<DTOTipoRoupa> alterar(DTOTipoRoupa dto) async {
-    var index = _itens.indexWhere((item) => item.id == dto.id);
-    if (index != -1) {
-      _itens[index] = dto;
-      return dto;
-    } else {
-      throw Exception('Item não encontrado');
-    }
+    var index = _tamanhos.indexWhere((t) => t.id == dto.id);
+    if (index == -1) throw Exception('Tamanho não encontrado');
+    _tamanhos[index] = dto;
+    return dto;
   }
 
   @override
   Future<bool> excluir(dynamic id) async {
-    var index = _itens.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      _itens.removeAt(index);
-      return true;
-    } else {
-      throw Exception('Item não encontrado');
-    }
+    var index = _tamanhos.indexWhere((t) => t.id == id);
+    if (index == -1) return false;
+    _tamanhos.removeAt(index);
+    return true;
   }
 
-  @override 
+  @override
   Future<List<DTOTipoRoupa>> consultar() async {
-    return _itens;
+    return _tamanhos;
   }
-
-} 
+}

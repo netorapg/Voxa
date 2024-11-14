@@ -1,83 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/dominio/dto/dto_tipo.dart';
-import 'package:voxa/dominio/interface/i_dao_tipo.dart';
-import 'package:voxa/dominio/tipo.dart'; // Import da classe TipoRoupa
+import 'package:voxa/screens/cadastrar_tipo.dart';
+import 'package:voxa/services/database_service.dart';
 
-class TipoRoupaScreen extends StatefulWidget {
-  final IDAOTipoRoupa dao;
+class TipoListPage extends StatefulWidget {
 
-  const TipoRoupaScreen({super.key, required this.dao});
+  const TipoListPage({super.key});
 
   @override
-  _TipoRoupaScreenState createState() => _TipoRoupaScreenState();
+  _TipoListPageState createState() => _TipoListPageState();
 }
 
-class _TipoRoupaScreenState extends State<TipoRoupaScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nomeController = TextEditingController();
-  TipoRoupa? _tipoRoupa;
-  List<DTOTipoRoupa> _listaTipos = [];
+class _TipoListPageState extends State<TipoListPage> {
+  final TipoRoupaDatabaseService _dao = TipoRoupaDatabaseService();
+  List<DTOTipoRoupa> _tamanhos = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _tipoRoupa = TipoRoupa(dao: widget.dao);
-    _consultarTipos();
+    _carregarTamanhos();
   }
 
-  Future<void> _consultarTipos() async {
+  Future<void> _carregarTamanhos() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      final tipos = await _tipoRoupa?.consultar();
+      _tamanhos = await _dao.consultar();
+    } catch (e) {
+      print('Erro ao carregar tamanhos: $e');
+    } finally {
       setState(() {
-        _listaTipos = tipos ?? [];
+        _isLoading = false;
       });
-    } catch (e) {
-      _mostrarErro(e.toString());
     }
   }
 
-  Future<void> _salvarTipoRoupa() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        _tipoRoupa?.nome = _nomeController.text;
-        await _tipoRoupa?.salvar();
-        _consultarTipos();
-        _limparCampos();
-      } catch (e) {
-        _mostrarErro(e.toString());
-      }
-    }
-  }
-
-  Future<void> _alterarTipoRoupa(DTOTipoRoupa tipo) async {
+  Future<void> _excluirTamanho(int id) async {
     try {
-      _tipoRoupa?.id = tipo.id;
-      _tipoRoupa?.nome = _nomeController.text;
-      await _tipoRoupa?.alterar();
-      _consultarTipos();
-      _limparCampos();
+      await _dao.excluir(id);
+      _carregarTamanhos(); // Atualiza a lista após exclusão
     } catch (e) {
-      _mostrarErro(e.toString());
+      print('Erro ao excluir tamanho: $e');
     }
   }
 
-  Future<void> _excluirTipoRoupa(dynamic id) async {
-    try {
-      await _tipoRoupa?.excluir();
-      _consultarTipos();
-    } catch (e) {
-      _mostrarErro(e.toString());
-    }
-  }
+  void _editarTamanho(DTOTipoRoupa tamanho) {
+    showDialog(
+      context: context,
+      builder: (context) {
+      final TextEditingController nomeController = TextEditingController(text: tamanho.nome);
 
-  void _limparCampos() {
-    _nomeController.clear();
-    _tipoRoupa?.id = null;
-  }
-
-  void _mostrarErro(String mensagem) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(mensagem)),
+      return AlertDialog(
+        title: const Text('Editar Tamanho'),
+        content: TextField(
+        controller: nomeController,
+        decoration: const InputDecoration(labelText: 'Nome'),
+        ),
+        actions: [
+        TextButton(
+          onPressed: () {
+          Navigator.of(context).pop();
+          },
+          child: const Text('Cancelar'),
+        ),
+        TextButton(
+          onPressed: () async {
+          final String novoNome = nomeController.text;
+          if (novoNome.isNotEmpty) {
+            try {
+            await _dao.alterar(DTOTipoRoupa(id: tamanho.id, nome: novoNome));
+            _carregarTamanhos();
+            Navigator.of(context).pop();
+            } catch (e) {
+            print('Erro ao atualizar tamanho: $e');
+            }
+          }
+          },
+          child: const Text('Salvar'),
+        ),
+        ],
+      );
+      },
     );
   }
 
@@ -85,64 +90,45 @@ class _TipoRoupaScreenState extends State<TipoRoupaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gerenciar Tipos de Roupa'),
+        title: const Text('Lista de Tamanhos'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _nomeController,
-                    decoration: const InputDecoration(labelText: 'Nome do Tipo de Roupa'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira um nome';
-                      }
-                      return null;
-                    },
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _tamanhos.length,
+              itemBuilder: (context, index) {
+                final tamanho = _tamanhos[index];
+                return ListTile(
+                  title: Text(tamanho.nome),
+                  subtitle: Text('ID: ${tamanho.id}'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => _editarTamanho(tamanho),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => _excluirTamanho(tamanho.id!),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _salvarTipoRoupa,
-                    child: const Text('Salvar'),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _listaTipos.length,
-                itemBuilder: (context, index) {
-                  final tipo = _listaTipos[index];
-                  return ListTile(
-                    title: Text(tipo.nome),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _nomeController.text = tipo.nome;
-                            _alterarTipoRoupa(tipo);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => _excluirTipoRoupa(tipo.id),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdicionarTipoPage(dao: _dao, tamanho: null),
             ),
-          ],
-        ),
+          ).then((_) {
+            _carregarTamanhos(); // Recarrega a lista após adicionar um novo tamanho
+          });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
