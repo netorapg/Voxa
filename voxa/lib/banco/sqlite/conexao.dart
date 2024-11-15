@@ -3,33 +3,38 @@ import 'package:sqflite/sqflite.dart';
 import 'package:voxa/banco/script.dart';
 
 class Conexao {
-  static late Database _db; // Instância do banco de dados
-  static bool conexaoCriada = false; // Controle de conexão
+  static Database? _db; // Banco de dados pode ser nulo antes da inicialização
 
-  // Método para iniciar a conexão com o banco de dados
   static Future<Database> iniciar() async {
-    // Verifica se a conexão já foi criada
-    if (!conexaoCriada) {
-      // Define o caminho do banco de dados
+    if (_db == null || !_db!.isOpen) { // Verifica se o banco já foi inicializado ou está fechado
       var path = join(await getDatabasesPath(), 'voxa.db');
-      
-      // Abre ou cria o banco de dados
+      print('Caminho do banco de dados: $path');
+
       _db = await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
-          // Criação das tabelas
+          print('Criando tabelas...');
           for (var script in criarTabelas) {
+            print('Executando script: $script');
             await db.execute(script);
           }
-          // Inserção dos registros iniciais
+          print('Inserindo registros...');
           for (var registro in inserirRegistros) {
+            print('Executando registro: $registro');
             await db.execute(registro);
           }
         },
       );
-      conexaoCriada = true; // Define que a conexão foi criada
+      print('Conexão criada com sucesso.');
     }
-    return _db; // Retorna a instância do banco de dados
+    return _db!;
+  }
+
+  static Future<void> fechar() async {
+    if (_db != null && _db!.isOpen) {
+      await _db!.close();
+      print('Conexão com o banco de dados encerrada.');
+    }
   }
 }

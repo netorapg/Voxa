@@ -46,23 +46,22 @@ class TamanhoRoupaDatabaseService implements IDAOTamanho {
   }
 }
 
-
 class TipoRoupaDatabaseService implements IDAOTipoRoupa {
-  // Construtor da classe
+  // O construtor não precisa mais de uma dependência para interagir com o banco de dados
   TipoRoupaDatabaseService();
 
   @override
   Future<DTOTipoRoupa> salvar(DTOTipoRoupa dto) async {
-    final db = await Conexao.iniciar(); // Inicia a conexão com o banco
-    final id = await db.insert('cores', dto.toMap());
-    return DTOTipoRoupa(id: id, nome: dto.nome); // Retorna o DTO com o novo ID gerado
+    final db = await Conexao.iniciar(); // Usa a conexão gerenciada
+    final id = await db.insert('tipos', dto.toMap());
+    return DTOTipoRoupa(id: id, nome: dto.nome); // Verifica se o ID gerado é o esperado
   }
 
   @override
   Future<DTOTipoRoupa> alterar(DTOTipoRoupa dto) async {
-    final db = await Conexao.iniciar(); // Inicia a conexão com o banco
+    final db = await Conexao.iniciar(); // Usa a conexão gerenciada
     await db.update(
-      'cores',
+      'tipos',
       dto.toMap(),
       where: 'id = ?',
       whereArgs: [dto.id],
@@ -72,19 +71,19 @@ class TipoRoupaDatabaseService implements IDAOTipoRoupa {
 
   @override
   Future<bool> excluir(dynamic id) async {
-    final db = await Conexao.iniciar(); // Inicia a conexão com o banco
+    final db = await Conexao.iniciar(); // Usa a conexão gerenciada
     final rows = await db.delete(
-      'cores',
+      'tipos',
       where: 'id = ?',
       whereArgs: [id],
     );
-    return rows > 0; // Retorna true se uma ou mais linhas foram deletadas
+    return rows > 0; // Retorna true se alguma linha foi deletada
   }
 
   @override
   Future<List<DTOTipoRoupa>> consultar() async {
-    final db = await Conexao.iniciar(); // Inicia a conexão com o banco
-    final List<Map<String, dynamic>> result = await db.query('cores');
-    return result.map((map) => DTOTipoRoupa.fromMap(map)).toList(); // Converte o resultado em uma lista de DTOCor
+    final db = await Conexao.iniciar(); // Usa a conexão gerenciada
+    final List<Map<String, dynamic>> result = await db.query('tipos');
+    return result.map((map) => DTOTipoRoupa.fromMap(map)).toList(); // Converte o resultado
   }
 }
