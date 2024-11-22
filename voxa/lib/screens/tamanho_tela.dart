@@ -129,6 +129,12 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Tamanhos'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _adicionarTamanho,
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -155,10 +161,6 @@ class _TamanhoListPageState extends State<TamanhoListPage> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _adicionarTamanho,
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

@@ -1,11 +1,19 @@
 class DTOFornecedor {
   dynamic id;
-  String? nome;
-  String? contato;
+  String? razaoSocial;
+  String? nomeFantasia;
+  String? cnpj;
+  String? endereco;
+  String? telefone;
+  String? email;
 
   DTOFornecedor({
     this.id,
-    this.nome,
-    this.contato,
+    this.razaoSocial,
+    this.nomeFantasia,
+    this.cnpj,
+    this.endereco,
+    this.telefone,
+    this.email,
   });
 }

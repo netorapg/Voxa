@@ -61,7 +61,7 @@ class Produto {
 
   Future<bool> excluir() async {
     if (_id == null) throw Exception('ID não pode ser nulo para excluir');
-    return await dao.excluir(_id!);
+    return await dao.excluir(_id);
   }
 
   Future<List<DTOProduto>> consultar() async {

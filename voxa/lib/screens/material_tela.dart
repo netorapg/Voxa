@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:voxa/dominio/dto/dto_marca.dart';
+import 'package:voxa/dominio/dto/dto_material.dart';
 import 'package:voxa/services/database_service.dart';
 
-class MarcaPage extends StatefulWidget {
-  const MarcaPage({super.key});
+class MaterialPage extends StatefulWidget {
+  const MaterialPage({super.key});
 
   @override
-  _MarcaPageState createState() => _MarcaPageState();
+  _MaterialPageState createState() => _MaterialPageState();
 }
 
-class _MarcaPageState extends State<MarcaPage> {
-  final MarcaDatabaseService _dao = MarcaDatabaseService();
-  List<DTOMarca> _marcas = [];
+class _MaterialPageState extends State<MaterialPage> {
+  final MaterialDatabaseService _dao = MaterialDatabaseService();
+  List<DTOMaterial> _materiais = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _carregarMarcas();
+    _carregarMateriais();
   }
 
-  Future<void> _carregarMarcas() async {
+  Future<void> _carregarMateriais() async {
     setState(() {
       _isLoading = true;
     });
     try {
-      _marcas = await _dao.consultar();
+      _materiais = await _dao.consultar();
     } catch (e) {
-      print('Erro ao carregar marca: $e');
+      print('Erro ao carregar material: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -35,23 +35,23 @@ class _MarcaPageState extends State<MarcaPage> {
     }
   }
 
-  Future<void> _excluirMarcas(int id) async {
+  Future<void> _excluirMateriais(int id) async {
     try {
       await _dao.excluir(id);
-      _carregarMarcas(); // Atualiza a lista após exclusão
+      _carregarMateriais(); // Atualiza a lista após exclusão
     } catch (e) {
-      print('Erro ao excluir marca: $e');
+      print('Erro ao excluir material: $e');
     }
   }
 
-  void _editarMarca(DTOMarca tipo) {
+  void _editarMateriais(DTOMaterial tipo) {
     showDialog(
       context: context,
       builder: (context) {
         final TextEditingController nomeController = TextEditingController(text: tipo.nome);
 
         return AlertDialog(
-          title: const Text('Editar Marca'),
+          title: const Text('Editar Material'),
           content: TextField(
             controller: nomeController,
             decoration: const InputDecoration(labelText: 'Nome'),
@@ -68,11 +68,11 @@ class _MarcaPageState extends State<MarcaPage> {
                 final String novoNome = nomeController.text;
                 if (novoNome.isNotEmpty) {
                   try {
-                    await _dao.alterar(DTOMarca(id: tipo.id, nome: novoNome));
-                    _carregarMarcas();
+                    await _dao.alterar(DTOMaterial(id: tipo.id, nome: novoNome));
+                    _carregarMateriais();
                     Navigator.of(context).pop();
                   } catch (e) {
-                    print('Erro ao atualizar marca: $e');
+                    print('Erro ao atualizar material: $e');
                   }
                 }
               },
@@ -84,17 +84,17 @@ class _MarcaPageState extends State<MarcaPage> {
     );
   }
 
-  void _adicionarMarcas() {
+  void _adicionarMateriais() {
     showDialog(
       context: context,
       builder: (context) {
         final TextEditingController nomeController = TextEditingController();
 
         return AlertDialog(
-          title: const Text('Adicionar Marca'),
+          title: const Text('Adicionar Material'),
           content: TextField(
             controller: nomeController,
-            decoration: const InputDecoration(labelText: 'Nome da Marca'),
+            decoration: const InputDecoration(labelText: 'Nome do Material'),
           ),
           actions: [
             TextButton(
@@ -108,11 +108,11 @@ class _MarcaPageState extends State<MarcaPage> {
                 final String nome = nomeController.text;
                 if (nome.isNotEmpty) {
                   try {
-                    await _dao.salvar(DTOMarca(nome: nome));
-                    _carregarMarcas();
+                    await _dao.salvar(DTOMaterial(nome: nome));
+                    _carregarMateriais();
                     Navigator.of(context).pop();
                   } catch (e) {
-                    print('Erro ao adicionar marcas: $e');
+                    print('Erro ao adicionar material: $e');
                   }
                 }
               },
@@ -128,33 +128,33 @@ class _MarcaPageState extends State<MarcaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Marcas'),
+        title: const Text('Lista de Materiais'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _adicionarMarcas,
+            onPressed: _adicionarMateriais,
           ),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-              itemCount: _marcas.length,
+              itemCount: _materiais.length,
               itemBuilder: (context, index) {
-                final marca = _marcas[index];
+                final material = _materiais[index];
                 return ListTile(
-                  title: Text(marca.nome),
-                  subtitle: Text('ID: ${marca.id}'),
+                  title: Text(material.nome),
+                  subtitle: Text('ID: ${material.id}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _editarMarca(marca),
+                        onPressed: () => _editarMateriais(material),
                       ),
                       IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => _excluirMarcas(marca.id!),
+                        onPressed: () => _excluirMateriais(material.id!),
                       ),
                     ],
                   ),

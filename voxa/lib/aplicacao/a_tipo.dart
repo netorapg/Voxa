@@ -6,7 +6,7 @@ abstract class AItem {
   late TipoRoupa tipo;
   late IDAOTipoRoupa dao;
 
-  aTamanho({required tipo, required dao});
+  aTipo({required tipo, required dao});
   salvar() {
     tipo.salvar();
   }

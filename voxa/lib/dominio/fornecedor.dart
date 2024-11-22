@@ -3,37 +3,57 @@ import 'package:voxa/dominio/interface/i_dao_fornecedor.dart';
 
 class Fornecedor {
   dynamic _id;
-  String? _nome;
-  String? _contato;
+  String? _razaoSocial;
+  String? _nomeFantasia;
+  String? _cnpj;
+  String? _endereco;
+  String? _telefone;
+  String? _email;
   IDAOFornecedor dao;
 
   Fornecedor({
     required this.dao,
     dynamic id,
-    String? nome,
-    String? contato,
+    String? razaoSocial,
+    String? nomeFantasia,
+    String? cnpj,
+    String? endereco,
+    String? telefone,
+    String? email,
   }) {
     _id = id;
-    this.nome = nome;
-    this.contato = contato;
+    this.razaoSocial = razaoSocial;
+    this.nomeFantasia = nomeFantasia;
+    this.cnpj = cnpj;
+    this.endereco = endereco;
+    this.telefone = telefone;
+    this.email = email;
   }
 
   void validar(DTOFornecedor dto) {
-    // Validação do nome
-    if (dto.nome == null || dto.nome!.isEmpty) {
-      throw Exception('Nome não pode ser nulo ou vazio');
+    if (dto.razaoSocial == null || dto.razaoSocial!.isEmpty) {
+      throw Exception('Razão Social não pode ser nula ou vazia');
     }
-    // Validação do contato
-    if (dto.contato == null || dto.contato!.isEmpty) {
-      throw Exception('Contato não pode ser nulo ou vazio');
+    if (dto.cnpj == null || dto.cnpj!.isEmpty) {
+      throw Exception('CNPJ não pode ser nulo ou vazio');
+    }
+    if (dto.telefone == null || dto.telefone!.isEmpty) {
+      throw Exception('Telefone não pode ser nulo ou vazio');
+    }
+    if (dto.email == null || dto.email!.isEmpty) {
+      throw Exception('Email não pode ser nulo ou vazio');
     }
   }
 
   Future<DTOFornecedor> salvar() async {
     final dto = DTOFornecedor(
       id: _id,
-      nome: _nome,
-      contato: _contato,
+      razaoSocial: _razaoSocial,
+      nomeFantasia: _nomeFantasia,
+      cnpj: _cnpj,
+      endereco: _endereco,
+      telefone: _telefone,
+      email: _email,
     );
     validar(dto);
     return await dao.salvar(dto);
@@ -44,8 +64,12 @@ class Fornecedor {
 
     final dto = DTOFornecedor(
       id: _id,
-      nome: _nome,
-      contato: _contato,
+      razaoSocial: _razaoSocial,
+      nomeFantasia: _nomeFantasia,
+      cnpj: _cnpj,
+      endereco: _endereco,
+      telefone: _telefone,
+      email: _email,
     );
 
     validar(dto);
@@ -62,8 +86,12 @@ class Fornecedor {
   }
 
   // Getters
-  String? get nome => _nome;
-  String? get contato => _contato;
+  String? get razaoSocial => _razaoSocial;
+  String? get nomeFantasia => _nomeFantasia;
+  String? get cnpj => _cnpj;
+  String? get endereco => _endereco;
+  String? get telefone => _telefone;
+  String? get email => _email;
 
   // Setters com validações
   set id(dynamic id) {
@@ -73,17 +101,39 @@ class Fornecedor {
     _id = id;
   }
 
-  set nome(String? nome) {
-    if (nome == null || nome.isEmpty) {
-      throw Exception('Nome não pode ser nulo ou vazio');
+  set razaoSocial(String? razaoSocial) {
+    if (razaoSocial == null || razaoSocial.isEmpty) {
+      throw Exception('Razão Social não pode ser nula ou vazia');
     }
-    _nome = nome;
+    _razaoSocial = razaoSocial;
   }
 
-  set contato(String? contato) {
-    if (contato == null || contato.isEmpty) {
-      throw Exception('Contato não pode ser nulo ou vazio');
+  set nomeFantasia(String? nomeFantasia) {
+    _nomeFantasia = nomeFantasia;
+  }
+
+  set cnpj(String? cnpj) {
+    if (cnpj == null || cnpj.isEmpty) {
+      throw Exception('CNPJ não pode ser nulo ou vazio');
     }
-    _contato = contato;
+    _cnpj = cnpj;
+  }
+
+  set endereco(String? endereco) {
+    _endereco = endereco;
+  }
+
+  set telefone(String? telefone) {
+    if (telefone == null || telefone.isEmpty) {
+      throw Exception('Telefone não pode ser nulo ou vazio');
+    }
+    _telefone = telefone;
+  }
+
+  set email(String? email) {
+    if (email == null || email.isEmpty) {
+      throw Exception('Email não pode ser nulo ou vazio');
+    }
+    _email = email;
   }
 }

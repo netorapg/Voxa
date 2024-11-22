@@ -1,6 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voxa/banco/sqlite/dao_material.dart';
-import 'package:voxa/dominio/material.dart';
 
 void main() {
   group('MaterialRoupa', () {

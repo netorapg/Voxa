@@ -37,4 +37,17 @@ class Conexao {
       print('Conexão com o banco de dados encerrada.');
     }
   }
+
+  static Future<void> recriarBancoDeDados() async {
+    var path = join(await getDatabasesPath(), 'voxa.db');
+    print('Recriando banco de dados em: $path');
+
+    // Deleta o banco de dados existente
+    await deleteDatabase(path);
+    print('Banco de dados deletado.');
+
+    // Recria o banco de dados
+    await iniciar();
+    print('Banco de dados recriado com sucesso.');
+  }
 }

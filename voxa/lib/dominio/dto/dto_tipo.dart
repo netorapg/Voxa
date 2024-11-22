@@ -1,5 +1,5 @@
 class DTOTipoRoupa {
-  int? id; // O ID pode ser nulo antes de ser salvo
+  int? id;
   String nome;
 
   DTOTipoRoupa({this.id, required this.nome});
@@ -11,10 +11,10 @@ class DTOTipoRoupa {
     };
   }
 
-  static DTOTipoRoupa fromMap(Map<String, dynamic> map) {
+  factory DTOTipoRoupa.fromMap(Map<String, dynamic> map) {
     return DTOTipoRoupa(
-      id: map['id'],
-      nome: map['nome'],
+      id: map['id'] as int?,
+      nome: map['nome'] as String,
     );
   }
 }

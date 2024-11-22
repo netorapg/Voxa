@@ -1,34 +1,34 @@
-import 'package:voxa/dominio/dto/dto_material.dart';
-import 'package:voxa/dominio/interface/i_dao_material.dart';
+import 'package:voxa/dominio/dto/dto_tipo.dart';
+import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 
-class DAOMaterialMemoria implements IDAOMaterial {
-  final List<DTOMaterial> _materiais = [];
+class DAOTipoMemoria implements IDAOTipoRoupa {
+  final List<DTOTipoRoupa> _tamanhos = [];
 
   @override
-  Future<DTOMaterial> salvar(DTOMaterial dto) async {
-    dto.id = _materiais.length + 1; // Simula um ID auto-incremento
-    _materiais.add(dto);
+  Future<DTOTipoRoupa> salvar(DTOTipoRoupa dto) async {
+    dto.id = _tamanhos.length + 1; // Simula um ID auto-incremento
+    _tamanhos.add(dto);
     return dto;
   }
 
   @override
-  Future<DTOMaterial> alterar(DTOMaterial dto) async {
-    var index = _materiais.indexWhere((m) => m.id == dto.id);
+  Future<DTOTipoRoupa> alterar(DTOTipoRoupa dto) async {
+    var index = _tamanhos.indexWhere((t) => t.id == dto.id);
     if (index == -1) throw Exception('Material não encontrado');
-    _materiais[index] = dto;
+    _tamanhos[index] = dto;
     return dto;
   }
 
   @override
   Future<bool> excluir(dynamic id) async {
-    var index = _materiais.indexWhere((m) => m.id == id);
+    var index = _tamanhos.indexWhere((t) => t.id == id);
     if (index == -1) return false;
-    _materiais.removeAt(index);
+    _tamanhos.removeAt(index);
     return true;
   }
 
   @override
-  Future<List<DTOMaterial>> consultar() async {
-    return _materiais;
+  Future<List<DTOTipoRoupa>> consultar() async {
+    return _tamanhos;
   }
 }

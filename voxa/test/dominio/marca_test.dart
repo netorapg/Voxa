@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:voxa/banco/sqlite/dao_marca.dart';
-import 'package:voxa/dominio/marca.dart';
 
 void main() {
   group('MarcaRoupa', () {
