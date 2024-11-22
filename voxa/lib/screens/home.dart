@@ -231,7 +231,7 @@ class OptionsDialog extends StatelessWidget {
             icon: Icons.store,
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, Rota.tamanho);
+              Navigator.pushNamed(context, Rota.fornecedor);
             },
           ),
           OptionButton(
@@ -268,10 +268,13 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon),
-      label: Text(label),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon),
+        label: Text(label),
+      ),
     );
   }
 }

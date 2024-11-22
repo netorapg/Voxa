@@ -4,4 +4,5 @@ class Rota{
   static String tipo = '/tipo';
   static String material = '/material';
   static String marca = '/marca';
+  static String fornecedor = '/fornecedor';
 }

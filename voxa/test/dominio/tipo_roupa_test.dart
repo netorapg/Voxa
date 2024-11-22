@@ -6,7 +6,7 @@ void main() {
     late DAOTipoRoupaMemoria dao;
 
     setUp(() {
-      dao = DAOTipoRoupaMemoria();
+      dao = DAOTipoRoupa();
       tipoRoupa = TipoRoupa(dao: dao, nome: "Camiseta");
     });
 

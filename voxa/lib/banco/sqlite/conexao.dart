@@ -50,4 +50,6 @@ class Conexao {
     await iniciar();
     print('Banco de dados recriado com sucesso.');
   }
+
+  static get() {}
 }
