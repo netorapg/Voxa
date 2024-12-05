@@ -39,7 +39,7 @@ class App extends StatelessWidget {
         Rota.tipo: (context) => const TipoPage(),
         Rota.material: (context) => const custom.MaterialPage(),
         Rota.marca: (context) => const MarcaPage(),
-        Rota.fornecedor: (context) => FornecedorPage()
+        Rota.fornecedor: (context) => const FornecedorPage()
       },
     );
   }

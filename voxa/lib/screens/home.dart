@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/widget/rota.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class Estoque extends StatefulWidget {
   const Estoque({super.key});
@@ -10,8 +11,8 @@ class Estoque extends StatefulWidget {
 
 class _EstoqueState extends State<Estoque> {
   final List<Map<String, dynamic>> roupas = [
-    {'nome': 'Camiseta', 'tamanho': 'M', 'cor': 'Azul', 'quantidade': 10},
-    {'nome': 'Calça Jeans', 'tamanho': '42', 'cor': 'Preto', 'quantidade': 5},
+    {'nome': 'Camiseta', 'tamanho': 'M', 'cor': Colors.blue, 'quantidade': 10},
+    {'nome': 'Calça Jeans', 'tamanho': '42', 'cor': Colors.black, 'quantidade': 5},
     // Adicione mais itens aqui
   ];
 
@@ -111,8 +112,19 @@ class RoupaCard extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(roupa['nome']),
-        subtitle: Text(
-          'Tamanho: ${roupa['tamanho']}, Cor: ${roupa['cor']}',
+        subtitle: Row(
+          children: [
+            Text('Tamanho: ${roupa['tamanho']}, Cor: '),
+            Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                color: roupa['cor'],
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 1),
+              ),
+            ),
+          ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -140,35 +152,91 @@ class RoupaCard extends StatelessWidget {
   }
 }
 
-class AddItemDialog extends StatelessWidget {
+class AddItemDialog extends StatefulWidget {
   final Function(Map<String, dynamic>) onAddItem;
 
   const AddItemDialog({super.key, required this.onAddItem});
 
   @override
-  Widget build(BuildContext context) {
-    final nomeController = TextEditingController();
-    final tamanhoController = TextEditingController();
-    final corController = TextEditingController();
+  State<AddItemDialog> createState() => _AddItemDialogState();
+}
 
+class _AddItemDialogState extends State<AddItemDialog> {
+  String? selectedTipo;
+  String? selectedTamanho;
+  Color selectedColor = Colors.blue;
+
+  // Exemplos de tipos e tamanhos, substitua pelos dados do seu banco
+  final List<String> tipos = ['Camiseta', 'Calça', 'Jaqueta']; // Exemplo de tipos
+  final List<String> tamanhos = ['P', 'M', 'G', 'GG']; // Exemplo de tamanhos
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Adicionar Roupa'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: nomeController,
-            decoration: const InputDecoration(labelText: 'Nome'),
-          ),
-          TextField(
-            controller: tamanhoController,
-            decoration: const InputDecoration(labelText: 'Tamanho'),
-          ),
-          TextField(
-            controller: corController,
-            decoration: const InputDecoration(labelText: 'Cor'),
-          ),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Dropdown para Tipo
+            DropdownButton<String>(
+              value: selectedTipo,
+              hint: const Text('Selecione o tipo'),
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedTipo = newValue;
+                });
+              },
+              items: tipos.map<DropdownMenuItem<String>>((String tipo) {
+                return DropdownMenuItem<String>(
+                  value: tipo,
+                  child: Text(tipo),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+
+            // Dropdown para Tamanho
+            DropdownButton<String>(
+              value: selectedTamanho,
+              hint: const Text('Selecione o tamanho'),
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedTamanho = newValue;
+                });
+              },
+              items: tamanhos.map<DropdownMenuItem<String>>((String tamanho) {
+                return DropdownMenuItem<String>(
+                  value: tamanho,
+                  child: Text(tamanho),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+
+            // Seletor de cor
+            Row(
+              children: [
+                const Text('Cor:'),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () => _showColorPicker(context),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: selectedColor,
+                      border: Border.all(color: Colors.black, width: 1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -177,10 +245,10 @@ class AddItemDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            onAddItem({
-              'nome': nomeController.text,
-              'tamanho': tamanhoController.text,
-              'cor': corController.text,
+            widget.onAddItem({
+              'nome': selectedTipo ?? '',
+              'tamanho': selectedTamanho ?? '',
+              'cor': selectedColor,
               'quantidade': 0,
             });
             Navigator.pop(context);
@@ -188,6 +256,31 @@ class AddItemDialog extends StatelessWidget {
           child: const Text('Adicionar'),
         ),
       ],
+    );
+  }
+
+  void _showColorPicker(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Selecione uma cor'),
+        content: SingleChildScrollView(
+          child: BlockPicker(
+            pickerColor: selectedColor,
+            onColorChanged: (color) {
+              setState(() {
+                selectedColor = color;
+              });
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
     );
   }
 }

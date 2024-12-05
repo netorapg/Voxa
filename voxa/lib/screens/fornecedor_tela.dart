@@ -12,6 +12,7 @@ class _FornecedorPageState extends State<FornecedorPage> {
   final List<Map<String, String>> fornecedores = [
     {
       'razaoSocial': 'Fornecedor A',
+      
       'nomeFantasia': 'Fantasia A',
       'cnpj': '11.222.333/0001-44',
       'endereco': 'Rua Principal, 123',
