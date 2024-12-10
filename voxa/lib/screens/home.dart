@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voxa/widget/rota.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 
 class Estoque extends StatefulWidget {
   const Estoque({super.key});
@@ -146,6 +149,13 @@ class RoupaCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      roupa['imagem'] != null
+                          ? Image.file(
+                              File(roupa['imagem']),
+                              width: 100,
+                              height: 100,
+                            )
+                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -168,20 +178,21 @@ class RoupaCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                   Row(children: [
-                     IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: onDelete,
-                      color: Colors.red,
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: onDelete,
+                          color: Colors.red,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () {
+                            // Implementar edição
+                          },
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        // Implementar edição
-                      },
-
-                    ),
-                   ],)
                   ],
                 ),
               ],
@@ -209,6 +220,9 @@ class _AddItemDialogState extends State<AddItemDialog> {
   String? selectedMarca;
   String? selectedFornecedor;
   Color selectedColor = Colors.blue;
+  File? _image;
+
+  final ImagePicker _picker = ImagePicker();
 
   // Exemplos de tipos e tamanhos, substitua pelos dados do seu banco
   final List<String> tipos = ['Camiseta', 'Calça', 'Jaqueta']; // Exemplo de tipos
@@ -216,6 +230,15 @@ class _AddItemDialogState extends State<AddItemDialog> {
   final List<String> materiais = ['Algodão', 'Poliéster', 'Lã', 'Seda']; // Exemplo de materiais
   final List<String> marcas = ['Nike', 'Adidas', 'Puma', 'Fila']; // Exemplo de marcas
   final List<String> fornecedores = ['Fornecedor 1', 'Fornecedor 2', 'Fornecedor 3']; // Exemplo de fornecedores  
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -339,6 +362,23 @@ class _AddItemDialogState extends State<AddItemDialog> {
                 ),
               ],
             ),
+            const SizedBox(height: 10),
+
+            // Botão para tirar foto
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: const Text('Tirar Foto'),
+            ),
+            const SizedBox(height: 10),
+
+            // Exibir imagem selecionada
+            _image != null
+                ? Image.file(
+                    _image!,
+                    width: 100,
+                    height: 100,
+                  )
+                : const Text('Nenhuma imagem selecionada'),
           ],
         ),
       ),
@@ -357,6 +397,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
               'fornecedor': selectedFornecedor ?? '',
               'cor': selectedColor,
               'quantidade': 0,
+              'imagem': _image?.path,
             });
             Navigator.pop(context);
           },
