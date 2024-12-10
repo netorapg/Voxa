@@ -11,8 +11,7 @@ class Estoque extends StatefulWidget {
 
 class _EstoqueState extends State<Estoque> {
   final List<Map<String, dynamic>> roupas = [
-    {'nome': 'Camiseta', 'tamanho': 'M', 'cor': Colors.blue, 'quantidade': 10},
-    {'nome': 'Calça Jeans', 'tamanho': '42', 'cor': Colors.black, 'quantidade': 5},
+    
     // Adicione mais itens aqui
   ];
 
@@ -110,40 +109,82 @@ class RoupaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(roupa['nome']),
-        subtitle: Row(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Tamanho: ${roupa['tamanho']}, Cor: '),
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: roupa['cor'],
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 1),
+            Text(
+              roupa['nome'],
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: onDecrement,
-            ),
-            Text(
-              '${roupa['quantidade']}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: onIncrement,
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: onDelete,
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Tamanho: ${roupa['tamanho']}'),
+                      Text('Material: ${roupa['material']}'),
+                      Text('Marca: ${roupa['marca']}'),
+                      Text('Fornecedor: ${roupa['fornecedor']}'),
+                      Row(
+                        children: [
+                          const Text('Cor: '),
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: roupa['cor'],
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black, width: 1),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: onDecrement,
+                        ),
+                        Text(
+                          '${roupa['quantidade']}',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: onIncrement,
+                        ),
+                      ],
+                    ),
+                   Row(children: [
+                     IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: onDelete,
+                      color: Colors.red,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        // Implementar edição
+                      },
+
+                    ),
+                   ],)
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -164,11 +205,17 @@ class AddItemDialog extends StatefulWidget {
 class _AddItemDialogState extends State<AddItemDialog> {
   String? selectedTipo;
   String? selectedTamanho;
+  String? selectedMaterial;
+  String? selectedMarca;
+  String? selectedFornecedor;
   Color selectedColor = Colors.blue;
 
   // Exemplos de tipos e tamanhos, substitua pelos dados do seu banco
   final List<String> tipos = ['Camiseta', 'Calça', 'Jaqueta']; // Exemplo de tipos
   final List<String> tamanhos = ['P', 'M', 'G', 'GG']; // Exemplo de tamanhos
+  final List<String> materiais = ['Algodão', 'Poliéster', 'Lã', 'Seda']; // Exemplo de materiais
+  final List<String> marcas = ['Nike', 'Adidas', 'Puma', 'Fila']; // Exemplo de marcas
+  final List<String> fornecedores = ['Fornecedor 1', 'Fornecedor 2', 'Fornecedor 3']; // Exemplo de fornecedores  
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +263,63 @@ class _AddItemDialogState extends State<AddItemDialog> {
             ),
             const SizedBox(height: 10),
 
+            // Dropdown para Material
+            DropdownButton<String>(
+              value: selectedMaterial,
+              hint: const Text('Selecione o material'),
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedMaterial = newValue;
+                });
+              },
+              items: materiais.map<DropdownMenuItem<String>>((String material) {
+                return DropdownMenuItem<String>(
+                  value: material,
+                  child: Text(material),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+
+            // Dropdown para Marca
+            DropdownButton<String>(
+              value: selectedMarca,
+              hint: const Text('Selecione a marca'),
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedMarca = newValue;
+                });
+              },
+              items: marcas.map<DropdownMenuItem<String>>((String marca) {
+                return DropdownMenuItem<String>(
+                  value: marca,
+                  child: Text(marca),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+
+            // Dropdown para Fornecedor
+            DropdownButton<String>(
+              value: selectedFornecedor,
+              hint: const Text('Selecione o fornecedor'),
+              isExpanded: true,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedFornecedor = newValue;
+                });
+              },
+              items: fornecedores.map<DropdownMenuItem<String>>((String fornecedor) {
+                return DropdownMenuItem<String>(
+                  value: fornecedor,
+                  child: Text(fornecedor),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 10),
+
             // Seletor de cor
             Row(
               children: [
@@ -248,6 +352,9 @@ class _AddItemDialogState extends State<AddItemDialog> {
             widget.onAddItem({
               'nome': selectedTipo ?? '',
               'tamanho': selectedTamanho ?? '',
+              'material': selectedMaterial ?? '',
+              'marca': selectedMarca ?? '',
+              'fornecedor': selectedFornecedor ?? '',
               'cor': selectedColor,
               'quantidade': 0,
             });

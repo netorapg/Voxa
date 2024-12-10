@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voxa/dominio/interface/i_dao_fornecedor.dart';
 import 'package:voxa/dominio/interface/i_dao_marca.dart';
 import 'package:voxa/dominio/interface/i_dao_material.dart';
-import 'package:voxa/dominio/interface/i_dao_tamanho.dart'; // Importa a interface do DAO
+import 'package:voxa/dominio/interface/i_dao_tamanho.dart'; 
 import 'package:voxa/dominio/interface/i_dao_tipo.dart';
 import 'package:voxa/screens/fornecedor_tela.dart';
 
@@ -30,7 +30,7 @@ class App extends StatelessWidget {
       title: 'Meu App',
       debugShowCheckedModeBanner: true,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 212, 88)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 236, 236, 236)),
         useMaterial3: false,
       ),
       routes: {
