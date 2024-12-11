@@ -92,7 +92,6 @@ class _EstoqueState extends State<Estoque> {
 }
 
 // Componentes Reutilizáveis
-
 class RoupaCard extends StatelessWidget {
   final Map<String, dynamic> roupa;
   final VoidCallback onIncrement;
@@ -110,43 +109,76 @@ class RoupaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 6,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              roupa['nome'],
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
             Row(
               children: [
+                // Imagem da Roupa
+                roupa['imagem'] != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          File(roupa['imagem']),
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.image, color: Colors.grey, size: 40),
+                      ),
+                const SizedBox(width: 16),
+
+                // Detalhes da Roupa
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      roupa['imagem'] != null
-                          ? Image.file(
-                              File(roupa['imagem']),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
-                            )
-                          : const SizedBox(),
-                      Text('Tamanho: ${roupa['tamanho']}'),
-                      Text('Material: ${roupa['material']}'),
-                      Text('Marca: ${roupa['marca']}'),
-                      Text('Fornecedor: ${roupa['fornecedor']}'),
+                      Text(
+                        roupa['nome'] ?? 'Sem Nome',
+                        style: const TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Marca: ${roupa['marca']}',
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Tamanho: ${roupa['tamanho']}',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Material: ${roupa['material']}',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Fornecedor: ${roupa['fornecedor']}',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
                       Row(
                         children: [
-                          const Text('Cor: '),
+                          const Text(
+                            'Cor: ',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
                           Container(
-                            width: 16,
-                            height: 16,
+                            width: 20,
+                            height: 20,
                             decoration: BoxDecoration(
                               color: roupa['cor'],
                               shape: BoxShape.circle,
@@ -158,41 +190,52 @@ class RoupaCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Controles de Quantidade e Ações
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: onDecrement,
-                        ),
-                        Text(
-                          '${roupa['quantidade']}',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: onIncrement,
-                        ),
-                      ],
+                    ElevatedButton(
+                      onPressed: onDecrement,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        shape: const CircleBorder(),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                      child: const Icon(Icons.remove, size: 15, color: Colors.white),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: onDelete,
-                          color: Colors.red,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            // Implementar edição
-                          },
-                        ),
-                      ],
+                    Text(
+                      '${roupa['quantidade']}',
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    ElevatedButton(
+                      onPressed: onIncrement,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        shape: const CircleBorder(),
+                        backgroundColor: Colors.green,
+                      ),
+                      child: const Icon(Icons.add, size: 15, color: Colors.white),
                     ),
                   ],
+                ),
+                ElevatedButton(
+                  onPressed: onDelete,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text(
+                    'Excluir',
+                    style: TextStyle(fontSize: 12, color: Colors.white),
+                  ),
                 ),
               ],
             ),
