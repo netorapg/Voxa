@@ -16,6 +16,20 @@ class _EstoqueState extends State<Estoque> {
     // Adicione mais itens aqui
   ];
 
+  void _showEditItemDialog(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (_) => AddItemDialog(
+        initialData: roupas[index],
+        onAddItem: (updatedItem) {
+          setState(() {
+            roupas[index] = updatedItem;
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +68,7 @@ class _EstoqueState extends State<Estoque> {
                       roupas.removeAt(index);
                     });
                   },
+                  onEdit: () => _showEditItemDialog(context, index),
                 );
               },
             ),
@@ -97,6 +112,7 @@ class RoupaCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const RoupaCard({
     super.key,
@@ -104,6 +120,7 @@ class RoupaCard extends StatelessWidget {
     required this.onIncrement,
     required this.onDecrement,
     required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -160,21 +177,21 @@ class RoupaCard extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         'Tamanho: ${roupa['tamanho']}',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'Material: ${roupa['material']}',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'Fornecedor: ${roupa['fornecedor']}',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       ),
                       Row(
                         children: [
                           const Text(
                             'Cor: ',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                           Container(
                             width: 20,
@@ -223,19 +240,38 @@ class RoupaCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: onDelete,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: onEdit,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: const Text(
+                        'EDITAR',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
                     ),
-                    backgroundColor: Colors.red,
-                  ),
-                  child: const Text(
-                    'Excluir',
-                    style: TextStyle(fontSize: 12, color: Colors.white),
-                  ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: onDelete,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                      child: const Text(
+                        'EXCLUIR',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -246,10 +282,12 @@ class RoupaCard extends StatelessWidget {
   }
 }
 
+
 class AddItemDialog extends StatefulWidget {
   final Function(Map<String, dynamic>) onAddItem;
+  final Map<String, dynamic>? initialData;
 
-  const AddItemDialog({super.key, required this.onAddItem});
+  const AddItemDialog({super.key, required this.onAddItem, this.initialData});
 
   @override
   State<AddItemDialog> createState() => _AddItemDialogState();
@@ -280,16 +318,32 @@ class _AddItemDialogState extends State<AddItemDialog> {
     'Seda'
   ]; // Exemplo de materiais
   final List<String> marcas = [
-    'Nike',
-    'Adidas',
-    'Puma',
-    'Fila'
+    'NIKE',
+    'ADIDAS',
+    'PUMA',
+    'FILA',
+    'VANS',
+    'COCA-COLA'
   ]; // Exemplo de marcas
   final List<String> fornecedores = [
     'Fornecedor 1',
     'Fornecedor 2',
     'Fornecedor 3'
   ]; // Exemplo de fornecedores
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialData != null) {
+      selectedTipo = widget.initialData!['nome'];
+      selectedTamanho = widget.initialData!['tamanho'];
+      selectedMaterial = widget.initialData!['material'];
+      selectedMarca = widget.initialData!['marca'];
+      selectedFornecedor = widget.initialData!['fornecedor'];
+      selectedColor = widget.initialData!['cor'];
+      _image = widget.initialData!['imagem'] != null ? File(widget.initialData!['imagem']) : null;
+    }
+  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -303,7 +357,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Adicionar Roupa'),
+      title: Text(widget.initialData == null ? 'Adicionar Roupa' : 'Editar Roupa'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -458,7 +512,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
               'marca': selectedMarca ?? '',
               'fornecedor': selectedFornecedor ?? '',
               'cor': selectedColor,
-              'quantidade': 0,
+              'quantidade': widget.initialData?['quantidade'] ?? 0,
               'imagem': _image?.path,
             });
             Navigator.pop(context);
