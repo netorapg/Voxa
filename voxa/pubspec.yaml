@@ -15,7 +15,7 @@ dependencies:
   image_picker: ^0.8.7+3
   cupertino_icons: ^1.0.6
   flutter_colorpicker: ^1.1.0
-  color_picker_field: ^0.2.0
+  color_picker_field: ^2.1.0
 
 
 dev_dependencies:

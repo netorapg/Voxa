@@ -102,6 +102,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  color_picker_field:
+    dependency: "direct main"
+    description:
+      name: color_picker_field
+      sha256: b1030f0d6460b22f992d169c1cc13889606a90e7865649783d802facc9f122af
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   convert:
     dependency: transitive
     description:

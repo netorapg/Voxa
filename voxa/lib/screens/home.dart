@@ -4,7 +4,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-
 class Estoque extends StatefulWidget {
   const Estoque({super.key});
 
@@ -14,7 +13,6 @@ class Estoque extends StatefulWidget {
 
 class _EstoqueState extends State<Estoque> {
   final List<Map<String, dynamic>> roupas = [
-    
     // Adicione mais itens aqui
   ];
 
@@ -131,6 +129,14 @@ class RoupaCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      roupa['imagem'] != null
+                          ? Image.file(
+                              File(roupa['imagem']),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            )
+                          : const SizedBox(),
                       Text('Tamanho: ${roupa['tamanho']}'),
                       Text('Material: ${roupa['material']}'),
                       Text('Marca: ${roupa['marca']}'),
@@ -149,13 +155,6 @@ class RoupaCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      roupa['imagem'] != null
-                          ? Image.file(
-                              File(roupa['imagem']),
-                              width: 100,
-                              height: 100,
-                            )
-                          : const SizedBox(),
                     ],
                   ),
                 ),
@@ -225,11 +224,29 @@ class _AddItemDialogState extends State<AddItemDialog> {
   final ImagePicker _picker = ImagePicker();
 
   // Exemplos de tipos e tamanhos, substitua pelos dados do seu banco
-  final List<String> tipos = ['Camiseta', 'Calça', 'Jaqueta']; // Exemplo de tipos
+  final List<String> tipos = [
+    'Camiseta',
+    'Calça',
+    'Jaqueta'
+  ]; // Exemplo de tipos
   final List<String> tamanhos = ['P', 'M', 'G', 'GG']; // Exemplo de tamanhos
-  final List<String> materiais = ['Algodão', 'Poliéster', 'Lã', 'Seda']; // Exemplo de materiais
-  final List<String> marcas = ['Nike', 'Adidas', 'Puma', 'Fila']; // Exemplo de marcas
-  final List<String> fornecedores = ['Fornecedor 1', 'Fornecedor 2', 'Fornecedor 3']; // Exemplo de fornecedores  
+  final List<String> materiais = [
+    'Algodão',
+    'Poliéster',
+    'Lã',
+    'Seda'
+  ]; // Exemplo de materiais
+  final List<String> marcas = [
+    'Nike',
+    'Adidas',
+    'Puma',
+    'Fila'
+  ]; // Exemplo de marcas
+  final List<String> fornecedores = [
+    'Fornecedor 1',
+    'Fornecedor 2',
+    'Fornecedor 3'
+  ]; // Exemplo de fornecedores
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.camera);
@@ -334,7 +351,8 @@ class _AddItemDialogState extends State<AddItemDialog> {
                   selectedFornecedor = newValue;
                 });
               },
-              items: fornecedores.map<DropdownMenuItem<String>>((String fornecedor) {
+              items: fornecedores
+                  .map<DropdownMenuItem<String>>((String fornecedor) {
                 return DropdownMenuItem<String>(
                   value: fornecedor,
                   child: Text(fornecedor),
@@ -377,6 +395,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
                     _image!,
                     width: 100,
                     height: 100,
+                    fit: BoxFit.cover,
                   )
                 : const Text('Nenhuma imagem selecionada'),
           ],
